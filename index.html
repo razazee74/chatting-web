@@ -48,7 +48,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Mobile Frame Layout */
         .app-frame {
             background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border); width: 90%; max-width: 360px; height: 82vh; max-height: 640px;
@@ -76,7 +75,6 @@
         .btn-neon:hover { transform: translateY(-1px); }
         .error-msg { color: #ff5555; font-size: 12px; margin-top: 8px; text-align: center; }
 
-        /* Glassmorphic Navbar */
         .bubble-navbar {
             background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border-top: 1px solid rgba(0, 210, 255, 0.15); padding: 10px 24px; display: flex; justify-content: space-between; align-items: center;
@@ -84,7 +82,6 @@
         .nav-item { color: #64748b; cursor: pointer; padding: 10px; border-radius: 50%; transition: 0.2s; display: flex; }
         .nav-item:hover, .nav-item.active { color: var(--neon-blue); background: rgba(0, 210, 255, 0.08); }
 
-        /* Profile Style Sheets */
         .profile-pic-container { position: relative; width: 80px; height: 80px; margin: 0 auto 12px auto; }
         .profile-avatar {
             width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #00d2ff, #0055ff);
@@ -92,7 +89,6 @@
         }
         .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Interactive Swipeable Notification Banner */
         .push-notification {
             position: absolute; top: -100px; left: 5%; width: 90%; 
             background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -122,7 +118,7 @@
         .search-row-item:hover { background: rgba(0, 210, 255, 0.05); border-color: rgba(0, 210, 255, 0.2); }
 
         .chat-container { display: flex; flex-direction: column; height: 100%; }
-        .chat-messages { flex: 1; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+        .chat-messages { flex: 1; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; flex-direction: column; }
         .msg-bubble { margin-bottom: 8px; padding: 8px 12px; border-radius: 12px; max-width: 75%; font-size: 13px; word-break: break-all; }
         .msg-send { background: var(--neon-blue); color: #000; align-self: flex-end; margin-left: auto; }
         .msg-receive { background: rgba(255,255,255,0.08); color: #fff; align-self: flex-start; }
@@ -186,10 +182,10 @@
         </div>
 
         <div id="appNavbar" class="bubble-navbar hidden">
-            <div class="nav-item active" onclick="switchActiveTab('home', this)"><i data-lucide="home"></i></div>
-            <div class="nav-item" onclick="switchActiveTab('chat', this)"><i data-lucide="message-square"></i></div>
-            <div class="nav-item" onclick="switchActiveTab('search', this)"><i data-lucide="search"></i></div>
-            <div class="nav-item" onclick="switchActiveTab('profile', this)"><i data-lucide="user"></i></div>
+            <div id="navHome" class="nav-item active" onclick="switchActiveTab('home', this)"><i data-lucide="home"></i></div>
+            <div id="navChat" class="nav-item" onclick="switchActiveTab('chat', this)"><i data-lucide="message-square"></i></div>
+            <div id="navSearch" class="nav-item" onclick="switchActiveTab('search', this)"><i data-lucide="search"></i></div>
+            <div id="navProfile" class="nav-item" onclick="switchActiveTab('profile', this)"><i data-lucide="user"></i></div>
         </div>
 
         <div id="photoSheet" class="bottom-sheet">
@@ -214,11 +210,25 @@
         }, 1000);
         lucide.createIcons();
         
-        // Mock default clean structural database indices matching query filters
-        if(!localStorage.getItem('bubble_db_user_reurge')) {
-            localStorage.setItem('bubble_db_user_reurge', JSON.stringify({username:"reurge",password:"123",displayName:"Reurge Core",bio:"Testing parameters system.",image:"",followers:5}));
-            localStorage.setItem('bubble_db_user_reurges', JSON.stringify({username:"reurges",password:"123",displayName:"Reurge Tech",bio:"Secondary system storage mirror.",image:"",followers:12}));
-        }
+        // Dynamic Live Caching Cross-Tab Loop for testing real device sync
+        window.addEventListener('storage', (e) => {
+            if (e.key && e.key.startsWith('chat_history_') && activeChatTarget !== "") {
+                reloadChatMessageNodeList();
+            }
+            if (e.key && e.key.startsWith('chat_history_')) {
+                // Check if incoming text is addressed to active session user
+                const roomName = e.key.replace('chat_history_', '');
+                if (roomName.includes(operatingUserKey)) {
+                    const sender = roomName.replace(operatingUserKey, '').replace('_log_', '');
+                    if (sender !== activeChatTarget) {
+                        const history = JSON.parse(e.newValue || "[]");
+                        if (history.length > 0 && history[history.length - 1].sender !== operatingUserKey) {
+                            launchDynamicToastAlert(sender, history[history.length - 1].text);
+                        }
+                    }
+                }
+            }
+        });
 
         const savedSession = localStorage.getItem('active_bubble_session');
         if (savedSession) restoreUserWorkspace(savedSession);
@@ -238,7 +248,6 @@
         const dynamicDbMeta = localStorage.getItem(`bubble_db_user_${userVal}`);
 
         if (dynamicDbMeta === null) {
-            // New profiles set default strictly to 0 followers
             const newUser = { username: userVal, password: passVal, displayName: userVal, bio: "Hello world!", image: "", followers: 0 };
             localStorage.setItem(`bubble_db_user_${userVal}`, JSON.stringify(newUser));
             saveSessionAndLaunch(userVal);
@@ -260,7 +269,7 @@
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('dashboardScreen').classList.remove('hidden');
         document.getElementById('appNavbar').classList.remove('hidden');
-        switchActiveTab('home', document.querySelector('.nav-item'));
+        switchActiveTab('home', document.getElementById('navHome'));
     }
 
     function logoutSession() {
@@ -279,7 +288,6 @@
         const viewPort = document.getElementById('subViewContent');
         const activeProfileData = JSON.parse(localStorage.getItem(`bubble_db_user_${operatingUserKey}`));
 
-        // Reset tracking so notifications function across all components cleanly
         if(targetTabId !== 'chat') activeChatTarget = "";
 
         if (targetTabId === 'home') {
@@ -288,7 +296,7 @@
             renderChatInboxList(viewPort);
         } else if (targetTabId === 'search') {
             viewPort.innerHTML = `
-                <div class="input-group"><input type="text" id="globalSearchInput" placeholder="Search (e.g. r)..." oninput="handleSmartLiveSearch(this.value)"></div>
+                <div class="input-group"><input type="text" id="globalSearchInput" placeholder="Search accounts..." oninput="handleSmartLiveSearch(this.value)"></div>
                 <div id="globalSearchResultsContainer"></div>
             `;
         } else if (targetTabId === 'profile') {
@@ -297,7 +305,6 @@
         lucide.createIcons();
     }
 
-    // Smart Prefix Parser Auto Search Logic Engine
     function handleSmartLiveSearch(query) {
         const container = document.getElementById('globalSearchResultsContainer');
         const cleanQuery = query.trim().toLowerCase();
@@ -319,7 +326,6 @@
 
         if (topMatches.length > 0) {
             topMatches.forEach(profile => {
-                // Fixed: Search now displays accurate actual user profile image avatars (PFP)
                 const avatarIcon = profile.image ? `<img src="${profile.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : profile.displayName.substring(0,2).toUpperCase();
                 container.innerHTML += `
                     <div class="search-row-item" onclick="handleSearchResultTap('${profile.username}')">
@@ -339,7 +345,7 @@
     function handleSearchResultTap(targetUsername) {
         const viewPort = document.getElementById('subViewContent');
         if (targetUsername === operatingUserKey) {
-            switchActiveTab('profile', document.querySelectorAll('.nav-item')[3]);
+            switchActiveTab('profile', document.getElementById('navProfile'));
         } else {
             document.getElementById('panelTitle').innerText = "User Profile";
             renderUserProfile(targetUsername, viewPort, false);
@@ -351,7 +357,7 @@
         const currentImgDisplay = userObj.image ? `<img src="${userObj.image}">` : userObj.displayName.substring(0,2).toUpperCase();
         
         const followFlagKey = `follow_${operatingUserKey}_to_${username}`;
-        const isFollowin = localStorage.getItem(followFlagKey) !== null;
+        const isFollowing = localStorage.getItem(followFlagKey) !== null;
         const followBtnText = isFollowing ? "Following" : "Follow";
 
         let actionControlBlock = `<button class="btn-neon" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:none;" onclick="displayProfileConfigurator()">Edit Profile</button>`;
@@ -367,7 +373,7 @@
 
         targetContainer.innerHTML = `
             <div style="text-align:center; margin-top:10px;">
-                <div class="profile-pic-container" ${isOwnProfile?'onclick="revealActionSheet()"':''}>
+                <div class="profile-pic-container" id="profilePicTriggerBox">
                     <div class="profile-avatar" id="profileViewAvatarNode">${currentImgDisplay}</div>
                     ${isOwnProfile?'<div style="position:absolute; bottom:0; right:0; background:var(--neon-blue); border-radius:50%; width:22px; height:22px; display:flex; justify-content:center; align-items:center;"><i data-lucide="camera" style="width:11px; height:11px; color:#000;"></i></div>':''}
                 </div>
@@ -378,6 +384,10 @@
                 ${actionControlBlock}
             </div>
         `;
+        
+        if(isOwnProfile) {
+            document.getElementById('profilePicTriggerBox').onclick = revealActionSheet;
+        }
         lucide.createIcons();
     }
 
@@ -399,10 +409,9 @@
             followBtn.style.background = "linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(0, 90, 255, 0.8))";
         }
         localStorage.setItem(`bubble_db_user_${targetUsername}`, JSON.stringify(userObj));
-        countNode.innerText = userObj.followers; // Fixed: Counter changes instantly in runtime view
+        countNode.innerText = userObj.followers;
     }
 
-    // Messaging Engine Pipeline & Toaster Notification Core
     function openDirectChatArea(targetUsername) {
         activeChatTarget = targetUsername;
         document.getElementById('panelTitle').innerText = `Chat: @${targetUsername}`;
@@ -434,23 +443,6 @@
         
         input.value = "";
         reloadChatMessageNodeList();
-
-        // Automated Response Simulation triggering dynamic interactive push alerts
-        setTimeout(() => {
-            if(activeChatTarget === 'reurge' || activeChatTarget === 'reurges') {
-                const incomingMessageText = `Hey! Received your text: "${text}".`;
-                chatHistory.push({ sender: activeChatTarget, text: incomingMessageText, timestamp: Date.now() });
-                localStorage.setItem(`chat_history_${chatRoomId}`, JSON.stringify(chatHistory));
-                
-                // If the user has the target chat room currently active, append text directly
-                if (activeChatTarget !== "") {
-                    reloadChatMessageNodeList();
-                }
-                
-                // Trigger Top Push Notification Toast Banner
-                launchDynamicToastAlert(activeChatTarget, incomingMessageText);
-            }
-        }, 1200);
     }
 
     function reloadChatMessageNodeList() {
@@ -478,7 +470,6 @@
                     const targetFriend = roomClean.replace(operatingUserKey, '').replace('_log_', '');
                     const friendMeta = JSON.parse(localStorage.getItem(`bubble_db_user_${targetFriend}`));
                     if (friendMeta) {
-                        // Fixed: Display name takes priority on inbox list view with accurate PFPs alongside
                         const inboxImgNode = friendMeta.image ? `<img src="${friendMeta.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : friendMeta.displayName.substring(0,2).toUpperCase();
                         listContainer.innerHTML += `
                             <div class="search-row-item" onclick="openDirectChatArea('${targetFriend}')">
@@ -492,7 +483,6 @@
         }
     }
 
-    // Sliding / Swipable Banner Notification Logic Implementation
     function launchDynamicToastAlert(senderUsername, messageBodyText) {
         const toast = document.getElementById('toastNotification');
         const tPfp = document.getElementById('toastPfp');
@@ -502,30 +492,23 @@
         const senderData = JSON.parse(localStorage.getItem(`bubble_db_user_${senderUsername}`));
         if(!senderData) return;
 
-        tName.innerText = senderData.displayName; // Display Name shown
+        tName.innerText = senderData.displayName;
         tText.innerText = messageBodyText;
         tPfp.innerHTML = senderData.image ? `<img src="${senderData.image}" style="width:100%; height:100%; object-fit:cover;">` : senderData.displayName.substring(0,2).toUpperCase();
 
-        // Clear ongoing animations pointers
         clearTimeout(toastTimeoutTracker);
         toast.style.transform = "translateX(0px)";
         toast.style.opacity = "1";
         toast.classList.add('show');
 
-        // Automatically slide up after exactly 1.5 seconds default frame duration
-        toastTimeoutTracker = setTimeout(() => {
-            dismissToastNotificationBanner();
-        }, 1500);
+        toastTimeoutTracker = setTimeout(() => { dismissToastNotificationBanner(); }, 1500);
     }
 
     function dismissToastNotificationBanner() {
-        const toast = document.getElementById('toastNotification');
-        toast.classList.remove('show');
+        document.getElementById('toastNotification').classList.remove('show');
     }
 
-    // Touch Swipe Motion Controller (Left/Right dismiss action metrics)
     let touchStartX = 0; let touchMoveX = 0; let isSwipingActive = false;
-
     function startSwipe(e) {
         isSwipingActive = true;
         touchStartX = e.clientX || e.touches[0].clientX;
@@ -546,15 +529,11 @@
         isSwipingActive = false;
         document.onmousemove = null; document.ontouchmove = null;
         const toast = document.getElementById('toastNotification');
-        if(Math.abs(touchMoveX) > 80) {
-            dismissToastNotificationBanner(); // Dismiss if swiped past threshold layout boundary
-        } else {
-            toast.style.transform = "translateX(0px)"; toast.style.opacity = "1"; // Bounce back inside viewport
-        }
+        if(Math.abs(touchMoveX) > 80) { dismissToastNotificationBanner(); } 
+        else { toast.style.transform = "translateX(0px)"; toast.style.opacity = "1"; }
         touchMoveX = 0;
     }
 
-    // Profile Metadata Persistence Modifiers
     function displayProfileConfigurator() {
         document.getElementById('dashboardScreen').classList.add('hidden');
         document.getElementById('appNavbar').classList.add('hidden');
@@ -571,7 +550,7 @@
         document.getElementById('editProfileScreen').classList.add('hidden');
         document.getElementById('dashboardScreen').classList.remove('hidden');
         document.getElementById('appNavbar').classList.remove('hidden');
-        switchActiveTab('profile', document.querySelectorAll('.nav-item')[3]);
+        switchActiveTab('profile', document.getElementById('navProfile'));
     }
 
     function commitProfileChanges() {
@@ -589,7 +568,7 @@
 
         if (targetUser !== operatingUserKey) {
             if (localStorage.getItem(`bubble_db_user_${targetUser}`) !== null) {
-                return errNode.innerText = "Error: Username already token!";
+                return errNode.innerText = "Error: Username already taken!";
             }
             localStorage.removeItem(`bubble_db_user_${operatingUserKey}`);
         }
@@ -637,6 +616,5 @@
         hideActionSheet();
     }
 </script>
-
 </body>
 </html>
