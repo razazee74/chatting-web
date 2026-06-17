@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bubble App</title>
+    <title>Bubble Net Pro</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -18,26 +18,22 @@
         * { box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
             background: var(--bg-gradient);
             color: #f8fafc;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
         }
 
-        /* Background Bubbles */
+        /* Ambient Floating Bubbles */
         .bg-bubbles {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             overflow: hidden; z-index: 1; margin: 0; padding: 0;
         }
         .bg-bubbles li {
             position: absolute; list-style: none; display: block;
-            width: 30px; height: 30px; background-color: rgba(0, 210, 255, 0.06);
+            width: 30px; height: 30px; background-color: rgba(0, 210, 255, 0.05);
             bottom: -100px; border-radius: 50%; animation: bubble-up 15s linear infinite;
         }
         .bg-bubbles li:nth-child(1) { left: 15%; width: 60px; height: 60px; animation-delay: 0s; }
@@ -49,7 +45,7 @@
             100% { transform: translateY(-1100px) rotate(360deg); opacity: 0; border-radius: 30%; }
         }
 
-        /* 1-Second Neon Loader */
+        /* 1-Second Bootstrap Loader */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #020610; display: flex; justify-content: center; align-items: center;
@@ -62,55 +58,29 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Mobile Container Layout (Centralized & Well-Balanced) */
+        /* Central Standardized Mobile Frame */
         .app-frame {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
-            width: 90%;
-            max-width: 360px;
-            height: 80vh;
-            max-height: 640px;
-            border-radius: 28px;
-            box-shadow: var(--neon-glow);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
+            width: 90%; max-width: 360px;
+            height: 82vh; max-height: 640px;
+            border-radius: 28px; box-shadow: var(--neon-glow);
+            z-index: 10; display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
         }
 
-        /* Content Area */
-        .app-content {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .screen {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            width: 100%;
-        }
-
-        .center-screen {
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
+        .app-content { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; }
+        .screen { display: flex; flex-direction: column; height: 100%; width: 100%; }
+        .center-screen { justify-content: center; align-items: center; text-align: center; }
 
         h2 {
-            margin-top: 0; margin-bottom: 24px; color: #fff;
-            font-size: 22px; font-weight: 600; letter-spacing: 0.5px;
-            text-shadow: 0 0 8px rgba(0, 210, 255, 0.3);
+            margin-top: 0; margin-bottom: 24px; color: #fff; font-size: 22px; font-weight: 600;
+            text-shadow: 0 0 8px rgba(0, 210, 255, 0.3); text-align: center;
         }
 
-        /* Glass Input Fields */
+        /* Premium Input Styles */
         .input-group { width: 100%; margin-bottom: 16px; text-align: left; }
         label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
         input, textarea {
@@ -120,12 +90,11 @@
         }
         input:focus, textarea:focus {
             outline: none; border-color: var(--neon-blue);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+            background: rgba(255, 255, 255, 0.07); box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
         }
         textarea { resize: none; font-family: inherit; }
 
-        /* Glass Action Button */
+        /* Action Glass Button */
         .btn-neon {
             width: 100%; padding: 13px;
             background: linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(0, 90, 255, 0.8));
@@ -133,60 +102,51 @@
             cursor: pointer; font-weight: 600; font-size: 14px;
             box-shadow: 0 4px 12px rgba(0, 90, 255, 0.3); transition: 0.2s;
         }
-        .btn-neon:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(0, 210, 255, 0.5);
-        }
-
+        .btn-neon:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0, 210, 255, 0.5); }
         .error-msg { color: #ff5555; font-size: 12px; margin-top: 8px; text-align: center; font-weight: 500; }
 
-        /* Floating Bubble Navigation Bar (4 Buttons Only) */
+        /* Ultimate Glassmorphic Bottom Navigation Bar */
         .bubble-navbar {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 12px 24px;
-            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid rgba(0, 210, 255, 0.15);
+            padding: 10px 24px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
         }
-
         .nav-item {
             color: #64748b; cursor: pointer; padding: 10px;
-            border-radius: 50%; transition: all 0.2s ease;
+            border-radius: 50%; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; justify-content: center; align-items: center;
         }
-
         .nav-item:hover, .nav-item.active {
-            color: var(--neon-blue);
-            background: rgba(0, 210, 255, 0.08);
-            transform: translateY(-3px);
+            color: var(--neon-blue); background: rgba(0, 210, 255, 0.08);
+            transform: translateY(-2px); text-shadow: 0 0 8px rgba(0, 210, 255, 0.6);
         }
 
-        /* Profile Elements */
-        .profile-pic-container {
-            position: relative; width: 85px; height: 85px; margin: 0 auto 16px auto; cursor: pointer;
-        }
+        /* Profile System Graphics */
+        .profile-pic-container { position: relative; width: 85px; height: 85px; margin: 0 auto 16px auto; cursor: pointer; }
         .profile-avatar {
             width: 100%; height: 100%; border-radius: 50%;
             background: linear-gradient(135deg, #00d2ff, #0055ff);
             display: flex; justify-content: center; align-items: center;
             font-weight: 600; color: white; font-size: 28px;
-            border: 2px solid rgba(255,255,255,0.1); overflow: hidden;
+            border: 2px solid rgba(0, 210, 255, 0.2); overflow: hidden;
         }
         .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Slide-up Bottom Sheet (Bubble style sheet) */
+        /* Slide-Up Ultra Glass Sheet */
         .bottom-sheet {
             position: absolute; bottom: -100%; left: 0; width: 100%;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(25px);
+            background: rgba(10, 15, 30, 0.96); backdrop-filter: blur(30px);
             border-top: 1px solid var(--glass-border);
             border-top-left-radius: 24px; border-top-right-radius: 24px;
             padding: 20px; box-sizing: border-box; z-index: 100;
             transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
         }
         .bottom-sheet.open { bottom: 0; }
         .sheet-btn {
-            width: 100%; padding: 12px; background: rgba(255,255,255,0.04);
+            width: 100%; padding: 13px; background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
             color: white; font-weight: 500; margin-bottom: 10px; cursor: pointer; text-align: center;
         }
@@ -195,25 +155,28 @@
 
         .hidden { display: none !important; }
 
-        /* Fake Placeholder Data lists */
-        .item-row {
+        /* Global Search Element Cards */
+        .search-result-card {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 210, 255, 0.1);
+            border-radius: 16px; padding: 16px; text-align: center; margin-top: 15px;
+            box-shadow: var(--neon-glow); animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .chat-row {
             display: flex; align-items: center; gap: 12px; padding: 12px;
-            background: rgba(255,255,255,0.02); border-radius: 12px; margin-bottom: 8px;
+            background: rgba(255,255,255,0.01); border-radius: 12px; margin-bottom: 8px;
             border: 1px solid rgba(255,255,255,0.04);
         }
-        .item-circle { width: 36px; height: 36px; border-radius: 50%; background: #1e293b; }
     </style>
 </head>
 <body>
 
-    <ul class="bg-bubbles">
-        <li></li><li></li><li></li><li></li>
-    </ul>
+    <ul class="bg-bubbles"><li></li><li></li><li></li><li></li></ul>
 
     <div id="loader"><div class="spinner"></div></div>
 
     <div class="app-frame">
-        
         <div class="app-content">
             
             <div id="loginScreen" class="screen center-screen">
@@ -226,22 +189,23 @@
                     <label>Password</label>
                     <input type="password" id="loginPass" placeholder="••••••••">
                 </div>
-                <button class="btn-neon" onclick="processAuth()">Access Dashboard</button>
+                <button class="btn-neon" onclick="executePortalAuth()">Access Dashboard</button>
                 <div id="loginError" class="error-msg"></div>
             </div>
 
             <div id="dashboardScreen" class="screen hidden">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                     <h3 id="panelTitle" style="margin:0; color:var(--neon-blue); font-size:18px;">Home</h3>
-                    <span id="globalTag" style="font-size:11px; background:rgba(0,210,255,0.08); padding:3px 8px; border-radius:8px; border:1px solid rgba(0,210,255,0.2);">@user</span>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <span id="globalTag" style="font-size:11px; background:rgba(0,210,255,0.08); padding:3px 8px; border-radius:8px; border:1px solid rgba(0,210,255,0.2);">@user</span>
+                        <i data-lucide="log-out" style="width: 14px; height: 14px; color: #ff5555; cursor: pointer;" onclick="logoutSession()"></i>
+                    </div>
                 </div>
-                
                 <div id="subViewContent" style="flex:1; overflow-y:auto;"></div>
             </div>
 
             <div id="editProfileScreen" class="screen hidden">
-                <h3 style="margin:0 0 16px 0; color:var(--neon-blue); font-size:18px;">Edit Profile</h3>
-                
+                <h3 style="margin:0 0 16px 0; color:var(--neon-blue); font-size:18px; text-align: center;">Edit Profile</h3>
                 <div class="input-group">
                     <label>Display Name</label>
                     <input type="text" id="editName">
@@ -256,237 +220,300 @@
                 </div>
                 <div class="input-group">
                     <label>Bio</label>
-                    <textarea id="editBio" rows="2" placeholder="Write something..."></textarea>
+                    <textarea id="editBio" rows="2" placeholder="Tell us about yourself..."></textarea>
                 </div>
-                
-                <button class="btn-neon" onclick="saveProfileData()">Save & Apply</button>
-                <button class="btn-neon" onclick="exitEditMode()" style="background:transparent; border:1px solid rgba(255,255,255,0.1); box-shadow:none; margin-top:8px; color:#94a3b8;">Cancel</button>
+                <button class="btn-neon" onclick="commitProfileChanges()">Save & Apply</button>
+                <button class="btn-neon" onclick="dismissEditScreen()" style="background:transparent; border:1px solid rgba(255,255,255,0.1); box-shadow:none; margin-top:8px; color:#94a3b8;">Cancel</button>
                 <div id="editError" class="error-msg"></div>
             </div>
 
         </div>
 
         <div id="appNavbar" class="bubble-navbar hidden">
-            <div class="nav-item active" onclick="navigateTab('home', this)"><i data-lucide="home"></i></div>
-            <div class="nav-item" onclick="navigateTab('chat', this)"><i data-lucide="message-square"></i></div>
-            <div class="nav-item" onclick="navigateTab('search', this)"><i data-lucide="search"></i></div>
-            <div class="nav-item" onclick="navigateTab('profile', this)"><i data-lucide="user"></i></div>
+            <div class="nav-item active" onclick="switchActiveTab('home', this)"><i data-lucide="home"></i></div>
+            <div class="nav-item" onclick="switchActiveTab('chat', this)"><i data-lucide="message-square"></i></div>
+            <div class="nav-item" onclick="switchActiveTab('search', this)"><i data-lucide="search"></i></div>
+            <div class="nav-item" onclick="switchActiveTab('profile', this)"><i data-lucide="user"></i></div>
         </div>
 
         <div id="photoSheet" class="bottom-sheet">
             <div style="width:40px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin: 0 auto 15px auto;"></div>
-            <div class="sheet-btn" onclick="triggerFilePicker()">Set New Profile</div>
-            <div class="sheet-btn danger" onclick="removeProfilePic()">Remove Current Profile</div>
-            <div class="sheet-btn" onclick="closePhotoSheet()" style="background:rgba(255,255,255,0.01); border:none; margin-top:5px; color:#64748b;">Close</div>
+            <div class="sheet-btn" onclick="triggerDeviceGallery()">Set New Profile</div>
+            <div class="sheet-btn danger" onclick="purgeAvatarGraphic()">Remove Current Profile</div>
+            <div class="sheet-btn" onclick="hideActionSheet()" style="background:transparent; border:none; margin-top:5px; color:#64748b;">Close</div>
         </div>
         
-        <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="loadImageFromGallery(event)">
-
+        <input type="file" id="deviceGalleryInput" accept="image/*" class="hidden" onchange="processSelectedImage(event)">
     </div>
 
 <script>
-    // Local State Engine Variables
-    let currentSessionUser = "";
-    let profileBioCache = "Active on Bubble Network.";
-    let profileDisplayNameCache = "";
-    let profileImageBlob = ""; // Holds base64 local image data
+    // Security RegEx Engine Core
+    const lowerCaseAlphaRegex = /^[a-z]+$/;
     
-    // Strict Input Regex: Only lowercase letters 'a' to 'z'
-    const strictUserRegex = /^[a-z]+$/;
+    // Live Memory Cache Buffers
+    let operatingUserKey = "";
+    let temporaryEditBase64Image = ""; 
 
-    // Fixed 1-Second Bootstrap Loader
+    // Bootstrap Validation On Load
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
-            const loader = document.getElementById('loader');
-            loader.style.opacity = '0';
-            setTimeout(() => loader.classList.add('hidden'), 300);
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 300);
         }, 1000);
         lucide.createIcons();
+        
+        // Persistent Auto-Login Verification Logic Check
+        const savedSession = localStorage.getItem('active_bubble_session');
+        if (savedSession) {
+            restoreUserWorkspace(savedSession);
+        }
     });
 
-    // Primary Auth Core Verification
-    function processAuth() {
-        const userInput = document.getElementById('loginUser').value.trim();
-        const passInput = document.getElementById('loginPass').value;
+    // Handle Authentication Request
+    function executePortalAuth() {
+        const userVal = document.getElementById('loginUser').value.trim();
+        const passVal = document.getElementById('loginPass').value;
         const errBox = document.getElementById('loginError');
         errBox.innerText = "";
 
-        // Validator Policies
-        if (!strictUserRegex.test(userInput) || userInput.length < 2 || userInput.length > 10) {
-            errBox.innerText = "Username must be 2-10 letters (ONLY small letters, no spaces/symbols)!";
+        if (!lowerCaseAlphaRegex.test(userVal) || userVal.length < 2 || userVal.length > 10) {
+            errBox.innerText = "Error: Username must be 2-10 small letters only!";
             return;
         }
-        if (!passInput) {
-            errBox.innerText = "Password is required!";
-            return;
-        }
+        if (!passVal) { return errBox.innerText = "Error: Password cannot be blank!"; }
 
-        const registeredPassword = localStorage.getItem(`db_pass_${userInput}`);
+        const dynamicDbMeta = localStorage.getItem(`bubble_db_user_${userVal}`);
 
-        if (registeredPassword === null) {
-            // Setup Brand New Account
-            localStorage.setItem(`db_pass_${userInput}`, passInput);
-            localStorage.setItem(`db_name_${userInput}`, userInput); // Default Display Name same as user
-            launchAppWorkspace(userInput);
+        if (dynamicDbMeta === null) {
+            // Register Brand New Data Profile Record Block
+            const newUserProfileSchema = {
+                username: userVal, password: passVal, displayName: userVal,
+                bio: "Hello, I am using Bubble Net!", image: ""
+            };
+            localStorage.setItem(`bubble_db_user_${userVal}`, JSON.stringify(newUserProfileSchema));
+            saveSessionAndLaunch(userVal);
         } else {
-            // Verify Authentication Key Match
-            if (registeredPassword === passInput) {
-                launchAppWorkspace(userInput);
+            // Read and Verify Authentication Credentials Matched
+            const activeProfile = JSON.parse(dynamicDbMeta);
+            if (activeProfile.password === passVal) {
+                saveSessionAndLaunch(userVal);
             } else {
-                errBox.innerText = "Error: Incorrect password match.";
+                errBox.innerText = "Error: Incorrect password mismatch.";
             }
         }
     }
 
-    function launchAppWorkspace(username) {
-        currentSessionUser = username;
-        profileDisplayNameCache = localStorage.getItem(`db_name_${username}`) || username;
-        profileBioCache = localStorage.getItem(`db_bio_${username}`) || "Active on Bubble Network.";
-        profileImageBlob = localStorage.getItem(`db_img_${username}`) || "";
+    function saveSessionAndLaunch(username) {
+        localStorage.setItem('active_bubble_session', username);
+        restoreUserWorkspace(username);
+    }
+
+    function restoreUserWorkspace(username) {
+        operatingUserKey = username;
+        const userData = JSON.parse(localStorage.getItem(`bubble_db_user_${username}`));
+        temporaryEditBase64Image = userData.image || "";
 
         document.getElementById('globalTag').innerText = `@${username}`;
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('dashboardScreen').classList.remove('hidden');
         document.getElementById('appNavbar').classList.remove('hidden');
         
-        // Land directly on home component view
-        navigateTab('home', document.querySelector('.nav-item'));
+        switchActiveTab('home', document.querySelector('.nav-item'));
     }
 
-    // Dynamic Navigation System
-    function navigateTab(targetView, navBtnElement) {
-        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-        if(navBtnElement) navBtnElement.classList.add('active');
+    function logoutSession() {
+        localStorage.removeItem('active_bubble_session');
+        operatingUserKey = "";
+        document.getElementById('dashboardScreen').classList.add('hidden');
+        document.getElementById('appNavbar').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+        document.getElementById('loginUser').value = "";
+        document.getElementById('loginPass').value = "";
+    }
 
-        document.getElementById('panelTitle').innerText = targetView.charAt(0).toUpperCase() + targetView.slice(1);
-        const viewport = document.getElementById('subViewContent');
-        
-        if (targetView === 'home') {
-            viewport.innerHTML = `
-                <p style="color:#94a3b8; font-size:13px; line-height:1.5;">Welcome to the dashboard framework, <b>${profileDisplayNameCache}</b>.</p>
+    // Interactive Router Engine Navigation Panel Controller
+    function switchActiveTab(targetTabId, viewNodeElement) {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        if (viewNodeElement) viewNodeElement.classList.add('active');
+
+        document.getElementById('panelTitle').innerText = targetTabId.charAt(0).toUpperCase() + targetTabId.slice(1);
+        const viewPort = document.getElementById('subViewContent');
+        const activeProfileData = JSON.parse(localStorage.getItem(`bubble_db_user_${operatingUserKey}`));
+
+        if (targetTabId === 'home') {
+            viewPort.innerHTML = `
+                <p style="color:#94a3b8; font-size:13px; line-height:1.5;">Welcome back, <b>${activeProfileData.displayName}</b>.</p>
                 <div style="background:rgba(255,255,255,0.01); padding:14px; border:1px solid rgba(255,255,255,0.04); border-radius:14px; margin-top:10px;">
-                    <h4 style="margin:0 0 4px 0; font-size:14px; color:#fff;">Status Hub</h4>
-                    <p style="margin:0; font-size:12px; color:#34d399;">● Secured peer configuration</p>
+                    <h4 style="margin:0 0 4px 0; font-size:14px; color:#fff;">Status Panel</h4>
+                    <p style="margin:0; font-size:12px; color:#34d399;">● Core Environment Encrypted</p>
                 </div>
             `;
-        } else if (targetView === 'chat') {
-            viewport.innerHTML = `
-                <div class="item-row"><div class="item-circle" style="background:linear-gradient(135deg, #00d2ff, #0055ff)"></div><div><h5 style="margin:0; font-size:14px;">Alex</h5><p style="margin:4px 0 0 0; font-size:11px; color:#64748b;">Let's connect later</p></div></div>
-                <div class="item-row"><div class="item-circle" style="background:linear-gradient(135deg, #a855f7, #6b21a8)"></div><div><h5 style="margin:0; font-size:14px;">Team Room</h5><p style="margin:4px 0 0 0; font-size:11px; color:#64748b;">Project layout complete</p></div></div>
+        } else if (targetTabId === 'chat') {
+            viewPort.innerHTML = `
+                <div class="chat-row"><div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#00d2ff,#0055ff)"></div><div><h5 style="margin:0; font-size:14px;">Alex</h5><p style="margin:2px 0 0 0; font-size:11px; color:#64748b;">The design parameters look clean.</p></div></div>
             `;
-        } else if (targetView === 'search') {
-            viewport.innerHTML = `
-                <input type="text" placeholder="Lookup tags..." style="margin-bottom:12px;">
-                <p style="font-size:12px; color:#475569; text-align:center;">Global search indexes ready</p>
+        } else if (targetTabId === 'search') {
+            viewPort.innerHTML = `
+                <div class="input-group">
+                    <input type="text" id="globalSearchInput" placeholder="Enter target username..." oninput="handleGlobalLiveQuery(this.value)">
+                </div>
+                <div id="globalSearchResultsContainer"></div>
             `;
-        } else if (targetView === 'profile') {
-            // Structural Component Template rendering for profile tab view
-            const avatarGraphics = profileImageBlob ? `<img src="${profileImageBlob}">` : profileDisplayNameCache.substring(0,2).toUpperCase();
-            viewport.innerHTML = `
+        } else if (targetTabId === 'profile') {
+            const currentImgDisplay = activeProfileData.image ? `<img src="${activeProfileData.image}">` : activeProfileData.displayName.substring(0,2).toUpperCase();
+            viewPort.innerHTML = `
                 <div style="text-align:center; margin-top:10px;">
-                    <div class="profile-pic-container" onclick="openPhotoSheet()">
-                        <div class="profile-avatar" id="avatarDisplay">${avatarGraphics}</div>
+                    <div class="profile-pic-container" onclick="revealActionSheet()">
+                        <div class="profile-avatar" id="profileViewAvatarNode">${currentImgDisplay}</div>
                         <div style="position:absolute; bottom:0; right:0; background:var(--neon-blue); border-radius:50%; width:24px; height:24px; display:flex; justify-content:center; align-items:center; border:2px solid #0f172a;"><i data-lucide="camera" style="width:12px; height:12px; color:#000;"></i></div>
                     </div>
-                    <h3 style="margin:0 0 4px 0; color:#fff; font-size:18px;">${profileDisplayNameCache}</h3>
-                    <p style="margin:0 0 16px 0; font-size:12px; color:#64748b;">@${currentSessionUser}</p>
-                    <p style="margin:0 auto 20px auto; font-size:13px; color:#94a3b8; max-width:240px; background:rgba(255,255,255,0.01); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03);">${profileBioCache}</p>
-                    <button class="btn-neon" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:none; font-size:13px; padding:10px;" onclick="enterEditMode()">Edit Profile</button>
+                    <h3 style="margin:0 0 4px 0; color:#fff; font-size:18px;">${activeProfileData.displayName}</h3>
+                    <p style="margin:0 0 16px 0; font-size:12px; color:#64748b;">@${activeProfileData.username}</p>
+                    <p style="margin:0 auto 20px auto; font-size:13px; color:#94a3b8; max-width:240px; background:rgba(255,255,255,0.01); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); word-break:break-word;">${activeProfileData.bio}</p>
+                    <button class="btn-neon" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:none; font-size:13px; padding:10px;" onclick="displayProfileConfigurator()">Edit Profile</button>
                 </div>
             `;
         }
         lucide.createIcons();
     }
 
-    // Secondary Profile Management Layer (Edit Workflow Switching)
-    function enterEditMode() {
+    // Dynamic Live Query Search Engine Implementation
+    function handleGlobalLiveQuery(queryRaw) {
+        const container = document.getElementById('globalSearchResultsContainer');
+        const queryClean = queryRaw.trim().toLowerCase();
+        container.innerHTML = "";
+
+        if (!queryClean) return;
+
+        const prospectiveUserKey = `bubble_db_user_${queryClean}`;
+        const queryMatchData = localStorage.getItem(prospectiveUserKey);
+
+        if (queryMatchData) {
+            const profileMatchedObj = JSON.parse(queryMatchData);
+            const cardImgNode = profileMatchedObj.image ? `<img src="${profileMatchedObj.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : profileMatchedObj.displayName.substring(0,2).toUpperCase();
+            
+            container.innerHTML = `
+                <div class="search-result-card">
+                    <div style="width:50px; height:50px; border-radius:50%; background:linear-gradient(135deg, #00d2ff, #0055ff); display:flex; justify-content:center; align-items:center; margin:0 auto 10px auto; font-weight:600; color:#fff; overflow:hidden;">${cardImgNode}</div>
+                    <h4 style="margin:0; color:#fff; font-size:15px;">${profileMatchedObj.displayName}</h4>
+                    <p style="margin:2px 0 8px 0; font-size:12px; color:var(--neon-blue);">@${profileMatchedObj.username}</p>
+                    <p style="margin:0; font-size:12px; color:#94a3b8; word-break:break-word;">${profileMatchedObj.bio}</p>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `<p style="font-size:13px; color:#64748b; text-align:center; margin-top:20px;">No result found for "${queryRaw}"</p>`;
+        }
+    }
+
+    // Profile Modals Configurations Switchers
+    function displayProfileConfigurator() {
         document.getElementById('dashboardScreen').classList.add('hidden');
         document.getElementById('appNavbar').classList.add('hidden');
         document.getElementById('editProfileScreen').classList.remove('hidden');
         document.getElementById('editError').innerText = "";
 
-        // Inject initial form defaults from data state caches
-        document.getElementById('editName').value = profileDisplayNameCache;
-        document.getElementById('editUsername').value = currentSessionUser;
-        document.getElementById('editPassword').value = localStorage.getItem(`db_pass_${currentSessionUser}`) || "";
-        document.getElementById('editBio').value = profileBioCache;
+        const currentCachedData = JSON.parse(localStorage.getItem(`bubble_db_user_${operatingUserKey}`));
+        document.getElementById('editName').value = currentCachedData.displayName;
+        document.getElementById('editUsername').value = currentCachedData.username;
+        document.getElementById('editPassword').value = currentCachedData.password;
+        document.getElementById('editBio').value = currentCachedData.bio;
+        temporaryEditBase64Image = currentCachedData.image || ""; // Keep persistent tracking active
     }
 
-    function exitEditMode() {
+    function dismissEditScreen() {
         document.getElementById('editProfileScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.remove('hidden');
         document.getElementById('appNavbar').classList.remove('hidden');
-        navigateTab('profile', document.querySelectorAll('.nav-item')[3]);
+        switchActiveTab('profile', document.querySelectorAll('.nav-item')[3]);
     }
 
-    function saveProfileData() {
-        const newName = document.getElementById('editName').value.trim();
-        const newUsername = document.getElementById('editUsername').value.trim();
-        const newPassword = document.getElementById('editPassword').value;
-        const newBio = document.getElementById('editBio').value.trim();
-        const errBox = document.getElementById('editError');
-        
-        errBox.innerText = "";
+    function commitProfileChanges() {
+        const targetName = document.getElementById('editName').value.trim();
+        const targetUser = document.getElementById('editUsername').value.trim().toLowerCase();
+        const targetPass = document.getElementById('editPassword').value;
+        const targetBio = document.getElementById('editBio').value.trim();
+        const errNode = document.getElementById('editError');
+        errNode.innerText = "";
 
-        // Validation Processing for inputs inside editing module
-        if (!newName) return errBox.innerText = "Display Name cannot be blank!";
-        if (!strictUserRegex.test(newUsername) || newUsername.length < 2 || newUsername.length > 10) {
-            return errBox.innerText = "Username must be 2-10 letters (ONLY small letters, no spaces/symbols)!";
+        if (!targetName) return errNode.innerText = "Error: Display Name cannot be empty!";
+        if (!lowerCaseAlphaRegex.test(targetUser) || targetUser.length < 2 || targetUser.length > 10) {
+            return errNode.innerText = "Error: Username must be 2-10 letters (Small alphabets ONLY)!";
         }
-        if (!newPassword) return errBox.innerText = "Password cannot be empty!";
+        if (!targetPass) return errNode.innerText = "Error: Password field required!";
 
-        // Logic Check: If changing username, make sure the new one is not already taken
-        if (newUsername !== currentSessionUser) {
-            if (localStorage.getItem(`db_pass_${newUsername}`) !== null) {
-                return errBox.innerText = "This username is already occupied by someone else!";
+        // Overlapping Username Allocation Safeguards
+        if (targetUser !== operatingUserKey) {
+            if (localStorage.getItem(`bubble_db_user_${targetUser}`) !== null) {
+                return errNode.innerText = "Error: This target username is already assigned!";
             }
-            // Clear out old username records from localStorage database structure
-            localStorage.removeItem(`db_pass_${currentSessionUser}`);
-            localStorage.removeItem(`db_name_${currentSessionUser}`);
-            localStorage.removeItem(`db_bio_${currentSessionUser}`);
-            localStorage.removeItem(`db_img_${currentSessionUser}`);
+            // Purge historical pointer nodes from cache store
+            localStorage.removeItem(`bubble_db_user_${operatingUserKey}`);
         }
 
-        // Commit newly saved attributes to localStorage
-        localStorage.setItem(`db_pass_${newUsername}`, newPassword);
-        localStorage.setItem(`db_name_${newUsername}`, newName);
-        localStorage.setItem(`db_bio_${newUsername}`, newBio);
-        if (profileImageBlob) {
-            localStorage.setItem(`db_img_${newUsername}`, profileImageBlob);
-        }
+        const consolidatedProfileSchema = {
+            username: targetUser, password: targetPass, displayName: targetName,
+            bio: targetBio || "Active on Bubble Net Platform.", image: temporaryEditBase64Image
+        };
 
-        // Synchronize operational app environment state
-        currentSessionUser = newUsername;
-        profileDisplayNameCache = newName;
-        profileBioCache = newBio;
+        // Inject modifications into DB store
+        localStorage.setItem(`bubble_db_user_${targetUser}`, JSON.stringify(consolidatedProfileSchema));
         
-        document.getElementById('globalTag').innerText = `@${newUsername}`;
-        exitEditMode();
+        // Stabilize system runtime environment keys
+        operatingUserKey = targetUser;
+        localStorage.setItem('active_bubble_session', targetUser);
+        
+        // Exit screen safely and clear pointers
+        document.getElementById('globalTag').innerText = `@${targetUser}`;
+        dismissEditScreen();
     }
 
-    // Bottom Sheet Control Mechanics
-    function openPhotoSheet() { document.getElementById('photoSheet').classList.add('open'); }
-    function closePhotoSheet() { document.getElementById('photoSheet').classList.remove('open'); }
-    function triggerFilePicker() { document.getElementById('galleryInput').click(); }
+    // Action Sheets Handlers Pipeline Configuration
+    function revealActionSheet() { document.getElementById('photoSheet').classList.add('open'); }
+    function hideActionSheet() { document.getElementById('photoSheet').classList.remove('open'); }
+    function triggerDeviceGallery() { document.getElementById('deviceGalleryInput').click(); }
 
-    function loadImageFromGallery(event) {
-        const file = event.target.target || event.target.files[0];
-        if (file) {
-            const fileReader = new FileReader();
-            fileReader.onload = function(e) {
-                profileImageBlob = e.target.result;
-                localStorage.setItem(`db_img_${currentSessionUser}`, profileImageBlob);
-                document.getElementById('avatarDisplay').innerHTML = `<img src="${profileImageBlob}">`;
-                closePhotoSheet();
+    function processSelectedImage(evt) {
+        const imgFile = evt.target.files[0];
+        if (imgFile) {
+            const streamReader = new FileReader();
+            streamReader.onload = function(e) {
+                const b64DataStr = e.target.result;
+                temporaryEditBase64Image = b64DataStr; // Sync with runtime local configuration cache
+
+                // Update deep storage layer right away so state transitions are persistent
+                const rawDb = localStorage.getItem(`bubble_db_user_${operatingUserKey}`);
+                if (rawDb) {
+                    const parsed = JSON.parse(rawDb);
+                    parsed.image = b64DataStr;
+                    localStorage.setItem(`bubble_db_user_${operatingUserKey}`, JSON.stringify(parsed));
+                }
+
+                // Smoothly patch current DOM graphics node layout pipeline
+                const profileImgContainer = document.getElementById('profileViewAvatarNode');
+                if (profileImgContainer) {
+                    profileImgContainer.innerHTML = `<img src="${b64DataStr}">`;
+                }
+                hideActionSheet();
             };
-            fileReader.readAsDataURL(file);
+            streamReader.readAsDataURL(imgFile);
         }
     }
 
-    function removeProfilePic() {
-        profileImageBlob = "";
-        localStorage.removeItem(`db_img_${currentSessionUser}`);
-        document.getElementById('avatarDisplay').innerHTML = profileDisplayNameCache.substring(0,2).toUpperCase();
-        closePhotoSheet();
+    function purgeAvatarGraphic() {
+        temporaryEditBase64Image = "";
+        const rawDb = localStorage.getItem(`bubble_db_user_${operatingUserKey}`);
+        if (rawDb) {
+            const parsed = JSON.parse(rawDb);
+            parsed.image = "";
+            localStorage.setItem(`bubble_db_user_${operatingUserKey}`, JSON.stringify(parsed));
+        }
+
+        const profileImgContainer = document.getElementById('profileViewAvatarNode');
+        if (profileImgContainer) {
+            const currentCachedData = JSON.parse(rawDb);
+            profileImgContainer.innerHTML = currentCachedData.displayName.substring(0,2).toUpperCase();
+        }
+        hideActionSheet();
     }
 </script>
 
