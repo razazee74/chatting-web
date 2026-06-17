@@ -3,119 +3,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P2P Serverless Chat</title>
+    <title>Neon Chat Hub</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0f19; color: #e2e8f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: #111827; border: 1px solid #1f2937; padding: 25px; border-radius: 12px; width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
-        h3 { margin-top: 0; color: #38bdf8; text-align: center; }
-        .section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #1f2937; }
-        input, textarea { width: 100%; padding: 10px; background: #1f2937; border: 1px solid #374151; color: white; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        button { width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.2s; }
-        button:hover { background: #0369a1; }
-        #chatBox { height: 200px; overflow-y: auto; background: #030712; padding: 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #1f2937; }
-        .msg { margin-bottom: 8px; font-size: 14px; }
-        .me { color: #38bdf8; }
-        .friend { color: #34d399; }
-        .hidden { display: none; }
+        :root {
+            --bg-color: #060b13;
+            --card-bg: #0f172a;
+            --neon-blue: #00d2ff;
+            --neon-glow: 0 0 15px rgba(0, 210, 255, 0.4);
+            --text-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 1-Second Neon Loading Screen */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.4s ease;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 210, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--neon-blue);
+            animation: spin 1s linear infinite;
+            box-shadow: var(--neon-glow);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Login & Chat Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 210, 255, 0.2);
+            padding: 30px;
+            border-radius: 16px;
+            width: 340px;
+            box-shadow: var(--neon-glow);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        h2, h3 {
+            margin-top: 0;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 8px rgba(0, 210, 255, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #00d2ff, #0066ff);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.4);
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 210, 255, 0.6);
+        }
+
+        .error-msg {
+            color: #ff4a4a;
+            font-size: 12px;
+            margin-top: 10px;
+            min-height: 18px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* P2P System Styles */
+        textarea {
+            width: 100%;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+            border-radius: 6px;
+            padding: 8px;
+            resize: none;
+            font-size: 11px;
+            box-sizing: border-box;
+        }
+        
+        #chatBox {
+            height: 220px;
+            background: #030712;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 12px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .msg { margin-bottom: 8px; font-size: 14px; word-break: break-all; }
+        .me { color: var(--neon-blue); font-weight: bold; }
+        .friend { color: #10b981; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h3>🌐 Direct Peer Chat</h3>
-    
-    <div id="setupSection">
-        <div class="section">
-            <p style="font-size: 12px; margin: 0 0 10px 0; color: #9ca3af;">1. Apna code generate karein aur dost ko bhejein:</p>
-            <button onclick="createOffer()">Step 1: Code Banayein</button>
-            <textarea id="localCode" rows="3" readonly placeholder="Aapka code yahan dikhega..." style="margin-top: 10px; resize: none; font-size: 11px;"></textarea>
-        </div>
-
-        <div class="section">
-            <p style="font-size: 12px; margin: 0 0 10px 0; color: #9ca3af;">2. Apne dost ka code yahan paste karein:</p>
-            <textarea id="remoteCode" rows="3" placeholder="Dost ka code yahan daalein..." style="resize: none; font-size: 11px;"></textarea>
-            <button onclick="connectToPeer()" style="background: #16a34a;">Step 2: Connect Karein</button>
-        </div>
+    <div id="loader">
+        <div class="spinner"></div>
     </div>
 
-    <div id="chatSection" class="hidden">
-        <div id="chatBox"></div>
-        <div style="display: flex; gap: 5px;">
-            <input type="text" id="msgInput" placeholder="Message likho..." onkeypress="if(event.key === 'Enter') sendMsg()">
-            <button onclick="sendMsg()" style="width: auto; margin: 0; padding: 0 20px;">Send</button>
+    <div id="loginCard" class="card">
+        <h2>PORTAL LOGIN</h2>
+        <div class="input-group">
+            <label for="username">Your Name (2-10 Letters)</label>
+            <input type="text" id="username" placeholder="Enter name..." autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter password...">
+        </div>
+        <button onclick="handleAuth()">Access Chat</button>
+        <div id="errorBox" class="error-msg"></div>
+    </div>
+
+    <div id="chatDashboard" class="card hidden" style="width: 450px;">
+        <h3 id="welcomeUser">Welcome</h3>
+        
+        <div id="p2pSetup" style="border-bottom: 1px solid #1e293b; margin-bottom: 15px; padding-bottom: 15px;">
+            <div style="margin-bottom: 10px;">
+                <button onclick="generateRoomCode()" style="background: #1e293b; border: 1px solid var(--neon-blue); box-shadow: none; font-size: 12px; padding: 6px;">1. Generate My Code</button>
+                <textarea id="myCode" rows="2" readonly placeholder="Aapka secret code yahan aayega..."></textarea>
+            </div>
+            <div>
+                <textarea id="friendCode" rows="2" placeholder="Dost ka code yahan paste karein..."></textarea>
+                <button onclick="connectToFriend()" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); margin-top: 5px; padding: 8px;">2. Connect to Friend</button>
+            </div>
+        </div>
+
+        <div id="actualChat" class="hidden">
+            <div id="chatBox"></div>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="msgBox" placeholder="Type neon message..." onkeypress="if(event.key === 'Enter') sendNeonMessage()">
+                <button onclick="sendNeonMessage()" style="width: auto; padding: 0 20px;">Send</button>
+            </div>
         </div>
     </div>
-</div>
 
 <script>
-    // WebRTC connection config (Free public STUN server for routing)
-    const peerConnection = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-    let dataChannel;
+    let currentUsername = "";
 
-    // Jab local ice candidate milega, tab textarea me code update hoga
-    peerConnection.onicecandidate = e => {
+    // 1. Force Loading Screen for exactly 1 second on start/refresh
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.style.opacity = '0';
+            setTimeout(() => loader.classList.add('hidden'), 400);
+        }, 1000);
+    });
+
+    // 2. Authentication Logic (Signup / Login Custom Controller)
+    function handleAuth() {
+        const nameInput = document.getElementById('username').value.trim();
+        const passInput = document.getElementById('password').value;
+        const errorBox = document.getElementById('errorBox');
+        
+        errorBox.innerText = ""; // clear previous errors
+
+        // Rule Check: Name length boundary (2 to 10 characters)
+        if (nameInput.length < 2 || nameInput.length > 10) {
+            errorBox.innerText = "Error: Name must be between 2 and 10 letters!";
+            return;
+        }
+
+        if (!passInput) {
+            errorBox.innerText = "Error: Password cannot be empty!";
+            return;
+        }
+
+        // Local Database Management (via localStorage keys)
+        const savedPassword = localStorage.getItem(`user_pass_${nameInput.toLowerCase()}`);
+
+        if (savedPassword === null) {
+            // Case A: Username doesn't exist, Registering as New Account
+            localStorage.setItem(`user_pass_${nameInput.toLowerCase()}`, passInput);
+            initializeSession(nameInput);
+        } else {
+            // Case B: Username exists, Attempting Login Verification
+            if (savedPassword === passInput) {
+                initializeSession(nameInput);
+            } else {
+                errorBox.innerText = "Error: Incorrect password for this username!";
+            }
+        }
+    }
+
+    function initializeSession(username) {
+        currentUsername = username;
+        document.getElementById('loginCard').classList.add('hidden');
+        document.getElementById('chatDashboard').classList.remove('hidden');
+        document.getElementById('welcomeUser').innerText = `⚡ Session: ${username}`;
+    }
+
+
+    // ==========================================
+    // 3. P2P WebRTC Core Engine (Serverless Sync)
+    // ==========================================
+    const p2pEngine = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+    let communicationChannel;
+
+    p2pEngine.onicecandidate = e => {
         if (!e.candidate) {
-            document.getElementById('localCode').value = btoa(JSON.stringify(peerConnection.localDescription));
+            document.getElementById('myCode').value = btoa(JSON.stringify(p2pEngine.localDescription));
         }
     };
 
-    // Jab dost se data channel receive ho (Receiver side)
-    peerConnection.ondatachannel = e => {
-        dataChannel = e.channel;
-        setupDataChannel();
+    p2pEngine.ondatachannel = e => {
+        communicationChannel = e.channel;
+        bindChannelEvents();
     };
 
-    // Chat start karne ke liye offer generate karna (Sender Side)
-    async function createOffer() {
-        dataChannel = peerConnection.createDataChannel("chat");
-        setupDataChannel();
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
+    async function generateRoomCode() {
+        communicationChannel = p2pEngine.createDataChannel("neon_sync");
+        bindChannelEvents();
+        const offer = await p2pEngine.createOffer();
+        await p2pEngine.setLocalDescription(offer);
     }
 
-    // Dost ka code accept karna aur connect karna
-    async function connectToPeer() {
-        const remoteValue = document.getElementById('remoteCode').value.trim();
-        if (!remoteValue) return alert("Pehle dost ka code daalo!");
+    async function connectToFriend() {
+        const incomingRaw = document.getElementById('friendCode').value.trim();
+        if (!incomingRaw) return alert("Please paste your friend's handshake token first.");
         
-        const desc = new RTCSessionDescription(JSON.parse(atob(remoteValue)));
-        await peerConnection.setRemoteDescription(desc);
+        try {
+            const parsedToken = new RTCSessionDescription(JSON.parse(atob(incomingRaw)));
+            await p2pEngine.setRemoteDescription(parsedToken);
 
-        // Agar saamne wale ne offer bheja tha, toh hum answer generate karenge
-        if (desc.type === 'offer') {
-            const answer = await peerConnection.createAnswer();
-            await peerConnection.setLocalDescription(answer);
+            if (parsedToken.type === 'offer') {
+                const answer = await p2pEngine.createAnswer();
+                await p2pEngine.setLocalDescription(answer);
+            }
+        } catch (err) {
+            alert("Invalid connection token configuration.");
         }
     }
 
-    // Data channel ke events manage karna
-    function setupDataChannel() {
-        dataChannel.onopen = () => {
-            document.getElementById('setupSection').classList.add('hidden');
-            document.getElementById('chatSection').classList.remove('hidden');
+    function bindChannelEvents() {
+        communicationChannel.onopen = () => {
+            document.getElementById('p2pSetup').classList.add('hidden');
+            document.getElementById('actualChat').classList.remove('hidden');
         };
-        dataChannel.onmessage = e => appendMessage(e.data, 'friend');
+        communicationChannel.onmessage = e => {
+            const package = JSON.parse(e.data);
+            renderMessage(package.sender, package.msg, 'friend');
+        };
     }
 
-    // Message send karne ka function
-    function sendMsg() {
-        const input = document.getElementById('msgInput');
-        if (input.value.trim() === "" || !dataChannel || dataChannel.readyState !== "open") return;
-        
-        dataChannel.send(input.value);
-        appendMessage(input.value, 'me');
-        input.value = '';
+    function sendNeonMessage() {
+        const msgBox = document.getElementById('msgBox');
+        const text = msgBox.value.trim();
+        if (!text || !communicationChannel || communicationChannel.readyState !== "open") return;
+
+        const packet = { sender: currentUsername, msg: text };
+        communicationChannel.send(JSON.stringify(packet));
+        renderMessage('You', text, 'me');
+        msgBox.value = '';
     }
 
-    // Chat UI me message jodna
-    function appendMessage(text, sender) {
+    function renderMessage(senderName, messageText, contextClass) {
         const chatBox = document.getElementById('chatBox');
-        const name = sender === 'me' ? 'You' : 'Friend';
-        chatBox.innerHTML += `<div class="msg"><span class="${sender}">${name}:</span> ${text}</div>`;
+        chatBox.innerHTML += `<div class="msg"><span class="${contextClass}">${senderName}:</span> ${messageText}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 </script>
 
 </body>
 </html>
-
