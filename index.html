@@ -414,4 +414,83 @@
 
     function exitEditMode() {
         document.getElementById('editProfileScreen').classList.add('hidden');
+        document.getElementById('appNavbar').classList.remove('hidden');
+        navigateTab('profile', document.querySelectorAll('.nav-item')[3]);
+    }
+
+    function saveProfileData() {
+        const newName = document.getElementById('editName').value.trim();
+        const newUsername = document.getElementById('editUsername').value.trim();
+        const newPassword = document.getElementById('editPassword').value;
+        const newBio = document.getElementById('editBio').value.trim();
+        const errBox = document.getElementById('editError');
+        
+        errBox.innerText = "";
+
+        // Validation Processing for inputs inside editing module
+        if (!newName) return errBox.innerText = "Display Name cannot be blank!";
+        if (!strictUserRegex.test(newUsername) || newUsername.length < 2 || newUsername.length > 10) {
+            return errBox.innerText = "Username must be 2-10 letters (ONLY small letters, no spaces/symbols)!";
+        }
+        if (!newPassword) return errBox.innerText = "Password cannot be empty!";
+
+        // Logic Check: If changing username, make sure the new one is not already taken
+        if (newUsername !== currentSessionUser) {
+            if (localStorage.getItem(`db_pass_${newUsername}`) !== null) {
+                return errBox.innerText = "This username is already occupied by someone else!";
+            }
+            // Clear out old username records from localStorage database structure
+            localStorage.removeItem(`db_pass_${currentSessionUser}`);
+            localStorage.removeItem(`db_name_${currentSessionUser}`);
+            localStorage.removeItem(`db_bio_${currentSessionUser}`);
+            localStorage.removeItem(`db_img_${currentSessionUser}`);
+        }
+
+        // Commit newly saved attributes to localStorage
+        localStorage.setItem(`db_pass_${newUsername}`, newPassword);
+        localStorage.setItem(`db_name_${newUsername}`, newName);
+        localStorage.setItem(`db_bio_${newUsername}`, newBio);
+        if (profileImageBlob) {
+            localStorage.setItem(`db_img_${newUsername}`, profileImageBlob);
+        }
+
+        // Synchronize operational app environment state
+        currentSessionUser = newUsername;
+        profileDisplayNameCache = newName;
+        profileBioCache = newBio;
+        
+        document.getElementById('globalTag').innerText = `@${newUsername}`;
+        exitEditMode();
+    }
+
+    // Bottom Sheet Control Mechanics
+    function openPhotoSheet() { document.getElementById('photoSheet').classList.add('open'); }
+    function closePhotoSheet() { document.getElementById('photoSheet').classList.remove('open'); }
+    function triggerFilePicker() { document.getElementById('galleryInput').click(); }
+
+    function loadImageFromGallery(event) {
+        const file = event.target.target || event.target.files[0];
+        if (file) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                profileImageBlob = e.target.result;
+                localStorage.setItem(`db_img_${currentSessionUser}`, profileImageBlob);
+                document.getElementById('avatarDisplay').innerHTML = `<img src="${profileImageBlob}">`;
+                closePhotoSheet();
+            };
+            fileReader.readAsDataURL(file);
+        }
+    }
+
+    function removeProfilePic() {
+        profileImageBlob = "";
+        localStorage.removeItem(`db_img_${currentSessionUser}`);
+        document.getElementById('avatarDisplay').innerHTML = profileDisplayNameCache.substring(0,2).toUpperCase();
+        closePhotoSheet();
+    }
+</script>
+
+</body>
+</html>
+
         document.getEl
