@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bubble Net Ultimate</title>
+    <title>Bubble Net Premium</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -48,6 +48,7 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* Mobile Frame Layout */
         .app-frame {
             background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border); width: 90%; max-width: 360px; height: 82vh; max-height: 640px;
@@ -75,6 +76,7 @@
         .btn-neon:hover { transform: translateY(-1px); }
         .error-msg { color: #ff5555; font-size: 12px; margin-top: 8px; text-align: center; }
 
+        /* Glassmorphic Navbar */
         .bubble-navbar {
             background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
             border-top: 1px solid rgba(0, 210, 255, 0.15); padding: 10px 24px; display: flex; justify-content: space-between; align-items: center;
@@ -82,6 +84,7 @@
         .nav-item { color: #64748b; cursor: pointer; padding: 10px; border-radius: 50%; transition: 0.2s; display: flex; }
         .nav-item:hover, .nav-item.active { color: var(--neon-blue); background: rgba(0, 210, 255, 0.08); }
 
+        /* Profile Style Sheets */
         .profile-pic-container { position: relative; width: 80px; height: 80px; margin: 0 auto 12px auto; }
         .profile-avatar {
             width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #00d2ff, #0055ff);
@@ -89,6 +92,18 @@
         }
         .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
         
+        /* Interactive Swipeable Notification Banner */
+        .push-notification {
+            position: absolute; top: -100px; left: 5%; width: 90%; 
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 210, 255, 0.25); border-radius: 16px; padding: 12px;
+            display: flex; align-items: center; gap: 12px; z-index: 2000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.2s ease, opacity 0.2s ease;
+            cursor: grab; user-select: none;
+        }
+        .push-notification.show { top: 15px; }
+
         .bottom-sheet {
             position: absolute; bottom: -100%; left: 0; width: 100%; background: rgba(10, 15, 30, 0.98); backdrop-filter: blur(30px);
             border-top: 1px solid var(--glass-border); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 20px; z-index: 100;
@@ -120,7 +135,16 @@
     <ul class="bg-bubbles"><li></li><li></li><li></li></ul>
     <div id="loader"><div class="spinner"></div></div>
 
-    <div class="app-frame">
+    <div class="app-frame" id="mainAppFrame">
+        
+        <div id="toastNotification" class="push-notification" onmousedown="startSwipe(event)" ontouchstart="startSwipe(event)">
+            <div id="toastPfp" style="width:36px; height:36px; border-radius:50%; background:var(--neon-blue); display:flex; justify-content:center; align-items:center; font-weight:600; font-size:12px; color:#fff; overflow:hidden;"></div>
+            <div style="flex:1; overflow:hidden;">
+                <h4 id="toastName" style="margin:0; font-size:13px; color:#fff;">Sender</h4>
+                <p id="toastText" style="margin:2px 0 0 0; font-size:11px; color:#94a3b8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Message text...</p>
+            </div>
+        </div>
+
         <div class="app-content">
             
             <div id="loginScreen" class="screen center-screen">
@@ -180,7 +204,8 @@
     const lowerCaseAlphaRegex = /^[a-z]+$/;
     let operatingUserKey = "";
     let temporaryEditBase64Image = "";
-    let activeChatTarget = ""; // Kaunse dost se chat khuli hai
+    let activeChatTarget = ""; 
+    let toastTimeoutTracker = null;
 
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
@@ -189,10 +214,10 @@
         }, 1000);
         lucide.createIcons();
         
-        // Mocking persistent accounts base inside system for clean testing environment
+        // Mock default clean structural database indices matching query filters
         if(!localStorage.getItem('bubble_db_user_reurge')) {
-            localStorage.setItem('bubble_db_user_reurge', JSON.stringify({username:"reurge",password:"123",displayName:"Reurge Alpha",bio:"Testing system node core.",image:"",followers:5}));
-            localStorage.setItem('bubble_db_user_reurges', JSON.stringify({username:"reurges",password:"123",displayName:"Reurge Beta",bio:"Next variant simulation.",image:"",followers:12}));
+            localStorage.setItem('bubble_db_user_reurge', JSON.stringify({username:"reurge",password:"123",displayName:"Reurge Core",bio:"Testing parameters system.",image:"",followers:5}));
+            localStorage.setItem('bubble_db_user_reurges', JSON.stringify({username:"reurges",password:"123",displayName:"Reurge Tech",bio:"Secondary system storage mirror.",image:"",followers:12}));
         }
 
         const savedSession = localStorage.getItem('active_bubble_session');
@@ -213,6 +238,7 @@
         const dynamicDbMeta = localStorage.getItem(`bubble_db_user_${userVal}`);
 
         if (dynamicDbMeta === null) {
+            // New profiles set default strictly to 0 followers
             const newUser = { username: userVal, password: passVal, displayName: userVal, bio: "Hello world!", image: "", followers: 0 };
             localStorage.setItem(`bubble_db_user_${userVal}`, JSON.stringify(newUser));
             saveSessionAndLaunch(userVal);
@@ -253,6 +279,9 @@
         const viewPort = document.getElementById('subViewContent');
         const activeProfileData = JSON.parse(localStorage.getItem(`bubble_db_user_${operatingUserKey}`));
 
+        // Reset tracking so notifications function across all components cleanly
+        if(targetTabId !== 'chat') activeChatTarget = "";
+
         if (targetTabId === 'home') {
             viewPort.innerHTML = `<p style="color:#94a3b8; font-size:13px;">Welcome back, <b>${activeProfileData.displayName}</b>.</p>`;
         } else if (targetTabId === 'chat') {
@@ -268,7 +297,7 @@
         lucide.createIcons();
     }
 
-    // Advanced Prefix Live Search Engine Engine (Detect Top 5 Matches)
+    // Smart Prefix Parser Auto Search Logic Engine
     function handleSmartLiveSearch(query) {
         const container = document.getElementById('globalSearchResultsContainer');
         const cleanQuery = query.trim().toLowerCase();
@@ -276,7 +305,6 @@
         if (!cleanQuery) return;
 
         let matches = [];
-        // Scan keys parsing matching parameters
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith('bubble_db_user_')) {
@@ -287,11 +315,11 @@
             }
         }
 
-        // Slice down target array block to limit up to top 5 items max
         const topMatches = matches.slice(0, 5);
 
         if (topMatches.length > 0) {
             topMatches.forEach(profile => {
+                // Fixed: Search now displays accurate actual user profile image avatars (PFP)
                 const avatarIcon = profile.image ? `<img src="${profile.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : profile.displayName.substring(0,2).toUpperCase();
                 container.innerHTML += `
                     <div class="search-row-item" onclick="handleSearchResultTap('${profile.username}')">
@@ -318,14 +346,12 @@
         }
     }
 
-    // Dynamic Generic Profile Renderer Configuration Box
     function renderUserProfile(username, targetContainer, isOwnProfile) {
         const userObj = JSON.parse(localStorage.getItem(`bubble_db_user_${username}`));
         const currentImgDisplay = userObj.image ? `<img src="${userObj.image}">` : userObj.displayName.substring(0,2).toUpperCase();
         
-        // Follow Dynamic Cache Flag verification check
         const followFlagKey = `follow_${operatingUserKey}_to_${username}`;
-        const isFollowing = localStorage.getItem(followFlagKey) !== null;
+        const isFollowin = localStorage.getItem(followFlagKey) !== null;
         const followBtnText = isFollowing ? "Following" : "Follow";
 
         let actionControlBlock = `<button class="btn-neon" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:none;" onclick="displayProfileConfigurator()">Edit Profile</button>`;
@@ -365,8 +391,7 @@
             localStorage.setItem(followFlagKey, "true");
             userObj.followers = (userObj.followers || 0) + 1;
             followBtn.innerText = "Following";
-            followBtn.style.background = "rgba(255,255,255,0.1)";
-            followBtn.style.boxShadow = "none";
+            followBtn.style.background = "rgba(255,255,255,0.1)"; followBtn.style.boxShadow = "none";
         } else {
             localStorage.removeItem(followFlagKey);
             userObj.followers = Math.max(0, (userObj.followers || 0) - 1);
@@ -374,10 +399,10 @@
             followBtn.style.background = "linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(0, 90, 255, 0.8))";
         }
         localStorage.setItem(`bubble_db_user_${targetUsername}`, JSON.stringify(userObj));
-        countNode.innerText = userObj.followers;
+        countNode.innerText = userObj.followers; // Fixed: Counter changes instantly in runtime view
     }
 
-    // Chat Controller Area Framework Layout Setup Pipelines
+    // Messaging Engine Pipeline & Toaster Notification Core
     function openDirectChatArea(targetUsername) {
         activeChatTarget = targetUsername;
         document.getElementById('panelTitle').innerText = `Chat: @${targetUsername}`;
@@ -410,20 +435,27 @@
         input.value = "";
         reloadChatMessageNodeList();
 
-        // Simulated Automatic Reply Bot System (Dost ka reply back module simulation)
+        // Automated Response Simulation triggering dynamic interactive push alerts
         setTimeout(() => {
             if(activeChatTarget === 'reurge' || activeChatTarget === 'reurges') {
-                chatHistory.push({ sender: activeChatTarget, text: `Hey! I received your message: "${text}".`, timestamp: Date.now() });
+                const incomingMessageText = `Hey! Received your text: "${text}".`;
+                chatHistory.push({ sender: activeChatTarget, text: incomingMessageText, timestamp: Date.now() });
                 localStorage.setItem(`chat_history_${chatRoomId}`, JSON.stringify(chatHistory));
-                if(document.getElementById('chatMsgFlowBox')) reloadChatMessageNodeList();
+                
+                // If the user has the target chat room currently active, append text directly
+                if (activeChatTarget !== "") {
+                    reloadChatMessageNodeList();
+                }
+                
+                // Trigger Top Push Notification Toast Banner
+                launchDynamicToastAlert(activeChatTarget, incomingMessageText);
             }
-        }, 1500);
+        }, 1200);
     }
 
     function reloadChatMessageNodeList() {
         const box = document.getElementById('chatMsgFlowBox');
-        if(!box) return;
-        box.innerHTML = "";
+        if(!box) return; box.innerHTML = "";
         const chatRoomId = [operatingUserKey, activeChatTarget].sort().join('_log_');
         const chatHistory = JSON.parse(localStorage.getItem(`chat_history_${chatRoomId}`)) || [];
 
@@ -435,7 +467,7 @@
     }
 
     function renderChatInboxList(targetContainer) {
-        targetContainer.innerHTML = `<p style="font-size:12px; color:#64748b; text-align:center; margin-top:20px;">Active Chat Rooms will auto-index below.</p><div id="inboxList"></div>`;
+        targetContainer.innerHTML = `<p style="font-size:12px; color:#64748b; text-align:center; margin-top:15px; margin-bottom:10px;">Active Channels</p><div id="inboxList"></div>`;
         const listContainer = document.getElementById('inboxList');
         
         for (let i = 0; i < localStorage.length; i++) {
@@ -446,9 +478,12 @@
                     const targetFriend = roomClean.replace(operatingUserKey, '').replace('_log_', '');
                     const friendMeta = JSON.parse(localStorage.getItem(`bubble_db_user_${targetFriend}`));
                     if (friendMeta) {
+                        // Fixed: Display name takes priority on inbox list view with accurate PFPs alongside
+                        const inboxImgNode = friendMeta.image ? `<img src="${friendMeta.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : friendMeta.displayName.substring(0,2).toUpperCase();
                         listContainer.innerHTML += `
                             <div class="search-row-item" onclick="openDirectChatArea('${targetFriend}')">
-                                <div style="font-weight:600;">@${targetFriend}</div>
+                                <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg, #a855f7, #6b21a8); display:flex; justify-content:center; align-items:center; font-size:11px; font-weight:600; overflow:hidden;">${inboxImgNode}</div>
+                                <div style="font-weight:600; font-size:14px; color:#fff;">${friendMeta.displayName}</div>
                             </div>
                         `;
                     }
@@ -457,7 +492,69 @@
         }
     }
 
-    // Profile Settings Form Processing Modules Configuration Code Block
+    // Sliding / Swipable Banner Notification Logic Implementation
+    function launchDynamicToastAlert(senderUsername, messageBodyText) {
+        const toast = document.getElementById('toastNotification');
+        const tPfp = document.getElementById('toastPfp');
+        const tName = document.getElementById('toastName');
+        const tText = document.getElementById('toastText');
+
+        const senderData = JSON.parse(localStorage.getItem(`bubble_db_user_${senderUsername}`));
+        if(!senderData) return;
+
+        tName.innerText = senderData.displayName; // Display Name shown
+        tText.innerText = messageBodyText;
+        tPfp.innerHTML = senderData.image ? `<img src="${senderData.image}" style="width:100%; height:100%; object-fit:cover;">` : senderData.displayName.substring(0,2).toUpperCase();
+
+        // Clear ongoing animations pointers
+        clearTimeout(toastTimeoutTracker);
+        toast.style.transform = "translateX(0px)";
+        toast.style.opacity = "1";
+        toast.classList.add('show');
+
+        // Automatically slide up after exactly 1.5 seconds default frame duration
+        toastTimeoutTracker = setTimeout(() => {
+            dismissToastNotificationBanner();
+        }, 1500);
+    }
+
+    function dismissToastNotificationBanner() {
+        const toast = document.getElementById('toastNotification');
+        toast.classList.remove('show');
+    }
+
+    // Touch Swipe Motion Controller (Left/Right dismiss action metrics)
+    let touchStartX = 0; let touchMoveX = 0; let isSwipingActive = false;
+
+    function startSwipe(e) {
+        isSwipingActive = true;
+        touchStartX = e.clientX || e.touches[0].clientX;
+        document.onmousemove = processSwipe; document.ontouchmove = processSwipe;
+        document.onmouseup = terminateSwipe; document.ontouchend = terminateSwipe;
+    }
+    function processSwipe(e) {
+        if(!isSwipingActive) return;
+        const currentX = e.clientX || e.touches[0].clientX;
+        touchMoveX = currentX - touchStartX;
+        if(Math.abs(touchMoveX) > 10) {
+            const toast = document.getElementById('toastNotification');
+            toast.style.transform = `translateX(${touchMoveX}px)`;
+            toast.style.opacity = `${1 - Math.abs(touchMoveX)/200}`;
+        }
+    }
+    function terminateSwipe() {
+        isSwipingActive = false;
+        document.onmousemove = null; document.ontouchmove = null;
+        const toast = document.getElementById('toastNotification');
+        if(Math.abs(touchMoveX) > 80) {
+            dismissToastNotificationBanner(); // Dismiss if swiped past threshold layout boundary
+        } else {
+            toast.style.transform = "translateX(0px)"; toast.style.opacity = "1"; // Bounce back inside viewport
+        }
+        touchMoveX = 0;
+    }
+
+    // Profile Metadata Persistence Modifiers
     function displayProfileConfigurator() {
         document.getElementById('dashboardScreen').classList.add('hidden');
         document.getElementById('appNavbar').classList.add('hidden');
@@ -543,4 +640,3 @@
 
 </body>
 </html>
-
