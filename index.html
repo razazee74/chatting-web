@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bubble Net Pro</title>
+    <title>Bubble Net Ultimate</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -11,7 +11,7 @@
             --neon-blue: #00d2ff;
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(0, 210, 255, 0.15);
-            --glass-blur: blur(20px);
+            --glass-blur: blur(25px);
             --neon-glow: 0 10px 30px rgba(0, 210, 255, 0.15);
         }
 
@@ -19,161 +19,105 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
-            background: var(--bg-gradient);
-            color: #f8fafc;
-            margin: 0; padding: 0;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden;
+            background: var(--bg-gradient); color: #f8fafc; margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden;
         }
 
-        /* Ambient Floating Bubbles */
         .bg-bubbles {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            overflow: hidden; z-index: 1; margin: 0; padding: 0;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1; margin: 0; padding: 0;
         }
         .bg-bubbles li {
-            position: absolute; list-style: none; display: block;
-            width: 30px; height: 30px; background-color: rgba(0, 210, 255, 0.05);
+            position: absolute; list-style: none; display: block; width: 30px; height: 30px; background-color: rgba(0, 210, 255, 0.04);
             bottom: -100px; border-radius: 50%; animation: bubble-up 15s linear infinite;
         }
-        .bg-bubbles li:nth-child(1) { left: 15%; width: 60px; height: 60px; animation-delay: 0s; }
-        .bg-bubbles li:nth-child(2) { left: 35%; width: 25px; height: 25px; animation-delay: 3s; animation-duration: 12s; }
-        .bg-bubbles li:nth-child(3) { left: 75%; width: 50px; height: 50px; animation-delay: 1s; }
-        .bg-bubbles li:nth-child(4) { left: 85%; width: 70px; height: 70px; animation-duration: 18s; }
+        .bg-bubbles li:nth-child(1) { left: 15%; width: 60px; height: 60px; }
+        .bg-bubbles li:nth-child(2) { left: 45%; width: 25px; height: 25px; animation-duration: 12s; }
+        .bg-bubbles li:nth-child(3) { left: 80%; width: 40px; height: 40px; }
         @keyframes bubble-up {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 50%; }
-            100% { transform: translateY(-1100px) rotate(360deg); opacity: 0; border-radius: 30%; }
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-1100px); opacity: 0; }
         }
 
-        /* 1-Second Bootstrap Loader */
         #loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #020610; display: flex; justify-content: center; align-items: center;
-            z-index: 9999; transition: opacity 0.3s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #020610;
+            display: flex; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.3s ease;
         }
         .spinner {
             width: 45px; height: 45px; border: 3px solid rgba(0, 210, 255, 0.1);
-            border-radius: 50%; border-top-color: var(--neon-blue);
-            animation: spin 1s linear infinite; box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
+            border-radius: 50%; border-top-color: var(--neon-blue); animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Central Standardized Mobile Frame */
         .app-frame {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            width: 90%; max-width: 360px;
-            height: 82vh; max-height: 640px;
-            border-radius: 28px; box-shadow: var(--neon-glow);
-            z-index: 10; display: flex; flex-direction: column;
-            position: relative; overflow: hidden;
+            background: var(--glass-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border); width: 90%; max-width: 360px; height: 82vh; max-height: 640px;
+            border-radius: 28px; box-shadow: var(--neon-glow); z-index: 10; display: flex; flex-direction: column; position: relative; overflow: hidden;
         }
 
-        .app-content { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; }
+        .app-content { flex: 1; padding: 22px; overflow-y: auto; display: flex; flex-direction: column; }
         .screen { display: flex; flex-direction: column; height: 100%; width: 100%; }
         .center-screen { justify-content: center; align-items: center; text-align: center; }
 
-        h2 {
-            margin-top: 0; margin-bottom: 24px; color: #fff; font-size: 22px; font-weight: 600;
-            text-shadow: 0 0 8px rgba(0, 210, 255, 0.3); text-align: center;
-        }
+        h2 { margin-top: 0; margin-bottom: 24px; color: #fff; font-size: 22px; font-weight: 600; text-shadow: 0 0 8px rgba(0, 210, 255, 0.3); }
 
-        /* Premium Input Styles */
-        .input-group { width: 100%; margin-bottom: 16px; text-align: left; }
-        label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-group { width: 100%; margin-bottom: 14px; text-align: left; }
+        label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; }
         input, textarea {
-            width: 100%; padding: 12px 14px; background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08); color: white;
-            border-radius: 12px; font-size: 14px; transition: 0.2s; box-sizing: border-box;
+            width: 100%; padding: 12px 14px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+            color: white; border-radius: 12px; font-size: 14px; box-sizing: border-box; transition: 0.2s;
         }
-        input:focus, textarea:focus {
-            outline: none; border-color: var(--neon-blue);
-            background: rgba(255, 255, 255, 0.07); box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
-        }
-        textarea { resize: none; font-family: inherit; }
+        input:focus, textarea:focus { outline: none; border-color: var(--neon-blue); background: rgba(255, 255, 255, 0.07); }
 
-        /* Action Glass Button */
         .btn-neon {
-            width: 100%; padding: 13px;
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(0, 90, 255, 0.8));
-            color: white; border: none; border-radius: 12px;
-            cursor: pointer; font-weight: 600; font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0, 90, 255, 0.3); transition: 0.2s;
+            width: 100%; padding: 13px; background: linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(0, 90, 255, 0.8));
+            color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.2s;
         }
-        .btn-neon:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0, 210, 255, 0.5); }
-        .error-msg { color: #ff5555; font-size: 12px; margin-top: 8px; text-align: center; font-weight: 500; }
+        .btn-neon:hover { transform: translateY(-1px); }
+        .error-msg { color: #ff5555; font-size: 12px; margin-top: 8px; text-align: center; }
 
-        /* Ultimate Glassmorphic Bottom Navigation Bar */
         .bubble-navbar {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-top: 1px solid rgba(0, 210, 255, 0.15);
-            padding: 10px 24px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid rgba(0, 210, 255, 0.15); padding: 10px 24px; display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-item {
-            color: #64748b; cursor: pointer; padding: 10px;
-            border-radius: 50%; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; justify-content: center; align-items: center;
-        }
-        .nav-item:hover, .nav-item.active {
-            color: var(--neon-blue); background: rgba(0, 210, 255, 0.08);
-            transform: translateY(-2px); text-shadow: 0 0 8px rgba(0, 210, 255, 0.6);
-        }
+        .nav-item { color: #64748b; cursor: pointer; padding: 10px; border-radius: 50%; transition: 0.2s; display: flex; }
+        .nav-item:hover, .nav-item.active { color: var(--neon-blue); background: rgba(0, 210, 255, 0.08); }
 
-        /* Profile System Graphics */
-        .profile-pic-container { position: relative; width: 85px; height: 85px; margin: 0 auto 16px auto; cursor: pointer; }
+        .profile-pic-container { position: relative; width: 80px; height: 80px; margin: 0 auto 12px auto; }
         .profile-avatar {
-            width: 100%; height: 100%; border-radius: 50%;
-            background: linear-gradient(135deg, #00d2ff, #0055ff);
-            display: flex; justify-content: center; align-items: center;
-            font-weight: 600; color: white; font-size: 28px;
-            border: 2px solid rgba(0, 210, 255, 0.2); overflow: hidden;
+            width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #00d2ff, #0055ff);
+            display: flex; justify-content: center; align-items: center; font-weight: 600; color: white; font-size: 24px; overflow: hidden;
         }
         .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Slide-Up Ultra Glass Sheet */
         .bottom-sheet {
-            position: absolute; bottom: -100%; left: 0; width: 100%;
-            background: rgba(10, 15, 30, 0.96); backdrop-filter: blur(30px);
-            border-top: 1px solid var(--glass-border);
-            border-top-left-radius: 24px; border-top-right-radius: 24px;
-            padding: 20px; box-sizing: border-box; z-index: 100;
-            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
+            position: absolute; bottom: -100%; left: 0; width: 100%; background: rgba(10, 15, 30, 0.98); backdrop-filter: blur(30px);
+            border-top: 1px solid var(--glass-border); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 20px; z-index: 100;
+            transition: bottom 0.3s ease;
         }
         .bottom-sheet.open { bottom: 0; }
         .sheet-btn {
-            width: 100%; padding: 13px; background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
-            color: white; font-weight: 500; margin-bottom: 10px; cursor: pointer; text-align: center;
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px; color: white; cursor: pointer; text-align: center; margin-bottom: 8px;
         }
-        .sheet-btn.danger { color: #ff5555; border-color: rgba(255, 85, 85, 0.2); }
-        .sheet-btn:active { background: rgba(255,255,255,0.08); }
+
+        .search-row-item {
+            display: flex; align-items: center; gap: 12px; padding: 10px; background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: 0.2s;
+        }
+        .search-row-item:hover { background: rgba(0, 210, 255, 0.05); border-color: rgba(0, 210, 255, 0.2); }
+
+        .chat-container { display: flex; flex-direction: column; height: 100%; }
+        .chat-messages { flex: 1; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+        .msg-bubble { margin-bottom: 8px; padding: 8px 12px; border-radius: 12px; max-width: 75%; font-size: 13px; word-break: break-all; }
+        .msg-send { background: var(--neon-blue); color: #000; align-self: flex-end; margin-left: auto; }
+        .msg-receive { background: rgba(255,255,255,0.08); color: #fff; align-self: flex-start; }
 
         .hidden { display: none !important; }
-
-        /* Global Search Element Cards */
-        .search-result-card {
-            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 210, 255, 0.1);
-            border-radius: 16px; padding: 16px; text-align: center; margin-top: 15px;
-            box-shadow: var(--neon-glow); animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .chat-row {
-            display: flex; align-items: center; gap: 12px; padding: 12px;
-            background: rgba(255,255,255,0.01); border-radius: 12px; margin-bottom: 8px;
-            border: 1px solid rgba(255,255,255,0.04);
-        }
     </style>
 </head>
 <body>
 
-    <ul class="bg-bubbles"><li></li><li></li><li></li><li></li></ul>
-
+    <ul class="bg-bubbles"><li></li><li></li><li></li></ul>
     <div id="loader"><div class="spinner"></div></div>
 
     <div class="app-frame">
@@ -183,47 +127,35 @@
                 <h2>Portal Login</h2>
                 <div class="input-group">
                     <label>Username (small letters only)</label>
-                    <input type="text" id="loginUser" placeholder="e.g. rjdev" autocomplete="off">
+                    <input type="text" id="loginUser" placeholder="e.g. reurge" autocomplete="off">
                 </div>
                 <div class="input-group">
                     <label>Password</label>
                     <input type="password" id="loginPass" placeholder="••••••••">
                 </div>
-                <button class="btn-neon" onclick="executePortalAuth()">Access Dashboard</button>
+                <button class="btn-neon" onclick="executePortalAuth()">Enter Dashboard</button>
                 <div id="loginError" class="error-msg"></div>
             </div>
 
             <div id="dashboardScreen" class="screen hidden">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <h3 id="panelTitle" style="margin:0; color:var(--neon-blue); font-size:18px;">Home</h3>
-                    <div style="display: flex; gap: 6px; align-items: center;">
-                        <span id="globalTag" style="font-size:11px; background:rgba(0,210,255,0.08); padding:3px 8px; border-radius:8px; border:1px solid rgba(0,210,255,0.2);">@user</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <h3 id="panelTitle" style="margin:0; color:var(--neon-blue); font-size:17px;">Home</h3>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span id="globalTag" style="font-size:11px; background:rgba(0,210,255,0.08); padding:3px 8px; border-radius:8px;">@user</span>
                         <i data-lucide="log-out" style="width: 14px; height: 14px; color: #ff5555; cursor: pointer;" onclick="logoutSession()"></i>
                     </div>
                 </div>
-                <div id="subViewContent" style="flex:1; overflow-y:auto;"></div>
+                <div id="subViewContent" style="flex:1; overflow-y:auto; display: flex; flex-direction: column;"></div>
             </div>
 
             <div id="editProfileScreen" class="screen hidden">
-                <h3 style="margin:0 0 16px 0; color:var(--neon-blue); font-size:18px; text-align: center;">Edit Profile</h3>
-                <div class="input-group">
-                    <label>Display Name</label>
-                    <input type="text" id="editName">
-                </div>
-                <div class="input-group">
-                    <label>Username (small letters only)</label>
-                    <input type="text" id="editUsername">
-                </div>
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" id="editPassword">
-                </div>
-                <div class="input-group">
-                    <label>Bio</label>
-                    <textarea id="editBio" rows="2" placeholder="Tell us about yourself..."></textarea>
-                </div>
+                <h3 style="margin:0 0 16px 0; color:var(--neon-blue); font-size:17px; text-align: center;">Edit Profile</h3>
+                <div class="input-group"><label>Display Name</label><input type="text" id="editName"></div>
+                <div class="input-group"><label>Username</label><input type="text" id="editUsername"></div>
+                <div class="input-group"><label>Password</label><input type="password" id="editPassword"></div>
+                <div class="input-group"><label>Bio</label><textarea id="editBio" rows="2"></textarea></div>
                 <button class="btn-neon" onclick="commitProfileChanges()">Save & Apply</button>
-                <button class="btn-neon" onclick="dismissEditScreen()" style="background:transparent; border:1px solid rgba(255,255,255,0.1); box-shadow:none; margin-top:8px; color:#94a3b8;">Cancel</button>
+                <button class="btn-neon" onclick="dismissEditScreen()" style="background:transparent; border:1px solid rgba(255,255,255,0.1); margin-top:6px; color:#94a3b8;">Cancel</button>
                 <div id="editError" class="error-msg"></div>
             </div>
 
@@ -237,24 +169,19 @@
         </div>
 
         <div id="photoSheet" class="bottom-sheet">
-            <div style="width:40px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin: 0 auto 15px auto;"></div>
             <div class="sheet-btn" onclick="triggerDeviceGallery()">Set New Profile</div>
-            <div class="sheet-btn danger" onclick="purgeAvatarGraphic()">Remove Current Profile</div>
-            <div class="sheet-btn" onclick="hideActionSheet()" style="background:transparent; border:none; margin-top:5px; color:#64748b;">Close</div>
+            <div class="sheet-btn" style="color:#ff5555;" onclick="purgeAvatarGraphic()">Remove Profile</div>
+            <div class="sheet-btn" onclick="hideActionSheet()" style="background:transparent; border:none; margin-top:4px;">Close</div>
         </div>
-        
         <input type="file" id="deviceGalleryInput" accept="image/*" class="hidden" onchange="processSelectedImage(event)">
     </div>
 
 <script>
-    // Security RegEx Engine Core
     const lowerCaseAlphaRegex = /^[a-z]+$/;
-    
-    // Live Memory Cache Buffers
     let operatingUserKey = "";
-    let temporaryEditBase64Image = ""; 
+    let temporaryEditBase64Image = "";
+    let activeChatTarget = ""; // Kaunse dost se chat khuli hai
 
-    // Bootstrap Validation On Load
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             document.getElementById('loader').style.opacity = '0';
@@ -262,44 +189,37 @@
         }, 1000);
         lucide.createIcons();
         
-        // Persistent Auto-Login Verification Logic Check
-        const savedSession = localStorage.getItem('active_bubble_session');
-        if (savedSession) {
-            restoreUserWorkspace(savedSession);
+        // Mocking persistent accounts base inside system for clean testing environment
+        if(!localStorage.getItem('bubble_db_user_reurge')) {
+            localStorage.setItem('bubble_db_user_reurge', JSON.stringify({username:"reurge",password:"123",displayName:"Reurge Alpha",bio:"Testing system node core.",image:"",followers:5}));
+            localStorage.setItem('bubble_db_user_reurges', JSON.stringify({username:"reurges",password:"123",displayName:"Reurge Beta",bio:"Next variant simulation.",image:"",followers:12}));
         }
+
+        const savedSession = localStorage.getItem('active_bubble_session');
+        if (savedSession) restoreUserWorkspace(savedSession);
     });
 
-    // Handle Authentication Request
     function executePortalAuth() {
-        const userVal = document.getElementById('loginUser').value.trim();
+        const userVal = document.getElementById('loginUser').value.trim().toLowerCase();
         const passVal = document.getElementById('loginPass').value;
         const errBox = document.getElementById('loginError');
         errBox.innerText = "";
 
         if (!lowerCaseAlphaRegex.test(userVal) || userVal.length < 2 || userVal.length > 10) {
-            errBox.innerText = "Error: Username must be 2-10 small letters only!";
-            return;
+            errBox.innerText = "Error: Username must be 2-10 small letters only!"; return;
         }
-        if (!passVal) { return errBox.innerText = "Error: Password cannot be blank!"; }
+        if (!passVal) return errBox.innerText = "Error: Password is required!";
 
         const dynamicDbMeta = localStorage.getItem(`bubble_db_user_${userVal}`);
 
         if (dynamicDbMeta === null) {
-            // Register Brand New Data Profile Record Block
-            const newUserProfileSchema = {
-                username: userVal, password: passVal, displayName: userVal,
-                bio: "Hello, I am using Bubble Net!", image: ""
-            };
-            localStorage.setItem(`bubble_db_user_${userVal}`, JSON.stringify(newUserProfileSchema));
+            const newUser = { username: userVal, password: passVal, displayName: userVal, bio: "Hello world!", image: "", followers: 0 };
+            localStorage.setItem(`bubble_db_user_${userVal}`, JSON.stringify(newUser));
             saveSessionAndLaunch(userVal);
         } else {
-            // Read and Verify Authentication Credentials Matched
             const activeProfile = JSON.parse(dynamicDbMeta);
-            if (activeProfile.password === passVal) {
-                saveSessionAndLaunch(userVal);
-            } else {
-                errBox.innerText = "Error: Incorrect password mismatch.";
-            }
+            if (activeProfile.password === passVal) saveSessionAndLaunch(userVal);
+            else errBox.innerText = "Error: Password mismatch.";
         }
     }
 
@@ -310,114 +230,244 @@
 
     function restoreUserWorkspace(username) {
         operatingUserKey = username;
-        const userData = JSON.parse(localStorage.getItem(`bubble_db_user_${username}`));
-        temporaryEditBase64Image = userData.image || "";
-
         document.getElementById('globalTag').innerText = `@${username}`;
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('dashboardScreen').classList.remove('hidden');
         document.getElementById('appNavbar').classList.remove('hidden');
-        
         switchActiveTab('home', document.querySelector('.nav-item'));
     }
 
     function logoutSession() {
         localStorage.removeItem('active_bubble_session');
-        operatingUserKey = "";
         document.getElementById('dashboardScreen').classList.add('hidden');
         document.getElementById('appNavbar').classList.add('hidden');
         document.getElementById('loginScreen').classList.remove('hidden');
-        document.getElementById('loginUser').value = "";
-        document.getElementById('loginPass').value = "";
     }
 
-    // Interactive Router Engine Navigation Panel Controller
     function switchActiveTab(targetTabId, viewNodeElement) {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        if (viewNodeElement) viewNodeElement.classList.add('active');
-
+        if(viewNodeElement) {
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            viewNodeElement.classList.add('active');
+        }
         document.getElementById('panelTitle').innerText = targetTabId.charAt(0).toUpperCase() + targetTabId.slice(1);
         const viewPort = document.getElementById('subViewContent');
         const activeProfileData = JSON.parse(localStorage.getItem(`bubble_db_user_${operatingUserKey}`));
 
         if (targetTabId === 'home') {
-            viewPort.innerHTML = `
-                <p style="color:#94a3b8; font-size:13px; line-height:1.5;">Welcome back, <b>${activeProfileData.displayName}</b>.</p>
-                <div style="background:rgba(255,255,255,0.01); padding:14px; border:1px solid rgba(255,255,255,0.04); border-radius:14px; margin-top:10px;">
-                    <h4 style="margin:0 0 4px 0; font-size:14px; color:#fff;">Status Panel</h4>
-                    <p style="margin:0; font-size:12px; color:#34d399;">● Core Environment Encrypted</p>
-                </div>
-            `;
+            viewPort.innerHTML = `<p style="color:#94a3b8; font-size:13px;">Welcome back, <b>${activeProfileData.displayName}</b>.</p>`;
         } else if (targetTabId === 'chat') {
-            viewPort.innerHTML = `
-                <div class="chat-row"><div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#00d2ff,#0055ff)"></div><div><h5 style="margin:0; font-size:14px;">Alex</h5><p style="margin:2px 0 0 0; font-size:11px; color:#64748b;">The design parameters look clean.</p></div></div>
-            `;
+            renderChatInboxList(viewPort);
         } else if (targetTabId === 'search') {
             viewPort.innerHTML = `
-                <div class="input-group">
-                    <input type="text" id="globalSearchInput" placeholder="Enter target username..." oninput="handleGlobalLiveQuery(this.value)">
-                </div>
+                <div class="input-group"><input type="text" id="globalSearchInput" placeholder="Search (e.g. r)..." oninput="handleSmartLiveSearch(this.value)"></div>
                 <div id="globalSearchResultsContainer"></div>
             `;
         } else if (targetTabId === 'profile') {
-            const currentImgDisplay = activeProfileData.image ? `<img src="${activeProfileData.image}">` : activeProfileData.displayName.substring(0,2).toUpperCase();
-            viewPort.innerHTML = `
-                <div style="text-align:center; margin-top:10px;">
-                    <div class="profile-pic-container" onclick="revealActionSheet()">
-                        <div class="profile-avatar" id="profileViewAvatarNode">${currentImgDisplay}</div>
-                        <div style="position:absolute; bottom:0; right:0; background:var(--neon-blue); border-radius:50%; width:24px; height:24px; display:flex; justify-content:center; align-items:center; border:2px solid #0f172a;"><i data-lucide="camera" style="width:12px; height:12px; color:#000;"></i></div>
-                    </div>
-                    <h3 style="margin:0 0 4px 0; color:#fff; font-size:18px;">${activeProfileData.displayName}</h3>
-                    <p style="margin:0 0 16px 0; font-size:12px; color:#64748b;">@${activeProfileData.username}</p>
-                    <p style="margin:0 auto 20px auto; font-size:13px; color:#94a3b8; max-width:240px; background:rgba(255,255,255,0.01); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); word-break:break-word;">${activeProfileData.bio}</p>
-                    <button class="btn-neon" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:none; font-size:13px; padding:10px;" onclick="displayProfileConfigurator()">Edit Profile</button>
-                </div>
-            `;
+            renderUserProfile(operatingUserKey, viewPort, true);
         }
         lucide.createIcons();
     }
 
-    // Dynamic Live Query Search Engine Implementation
-    function handleGlobalLiveQuery(queryRaw) {
+    // Advanced Prefix Live Search Engine Engine (Detect Top 5 Matches)
+    function handleSmartLiveSearch(query) {
         const container = document.getElementById('globalSearchResultsContainer');
-        const queryClean = queryRaw.trim().toLowerCase();
+        const cleanQuery = query.trim().toLowerCase();
         container.innerHTML = "";
+        if (!cleanQuery) return;
 
-        if (!queryClean) return;
+        let matches = [];
+        // Scan keys parsing matching parameters
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('bubble_db_user_')) {
+                const username = key.replace('bubble_db_user_', '');
+                if (username.startsWith(cleanQuery)) {
+                    matches.push(JSON.parse(localStorage.getItem(key)));
+                }
+            }
+        }
 
-        const prospectiveUserKey = `bubble_db_user_${queryClean}`;
-        const queryMatchData = localStorage.getItem(prospectiveUserKey);
+        // Slice down target array block to limit up to top 5 items max
+        const topMatches = matches.slice(0, 5);
 
-        if (queryMatchData) {
-            const profileMatchedObj = JSON.parse(queryMatchData);
-            const cardImgNode = profileMatchedObj.image ? `<img src="${profileMatchedObj.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : profileMatchedObj.displayName.substring(0,2).toUpperCase();
-            
-            container.innerHTML = `
-                <div class="search-result-card">
-                    <div style="width:50px; height:50px; border-radius:50%; background:linear-gradient(135deg, #00d2ff, #0055ff); display:flex; justify-content:center; align-items:center; margin:0 auto 10px auto; font-weight:600; color:#fff; overflow:hidden;">${cardImgNode}</div>
-                    <h4 style="margin:0; color:#fff; font-size:15px;">${profileMatchedObj.displayName}</h4>
-                    <p style="margin:2px 0 8px 0; font-size:12px; color:var(--neon-blue);">@${profileMatchedObj.username}</p>
-                    <p style="margin:0; font-size:12px; color:#94a3b8; word-break:break-word;">${profileMatchedObj.bio}</p>
-                </div>
-            `;
+        if (topMatches.length > 0) {
+            topMatches.forEach(profile => {
+                const avatarIcon = profile.image ? `<img src="${profile.image}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">` : profile.displayName.substring(0,2).toUpperCase();
+                container.innerHTML += `
+                    <div class="search-row-item" onclick="handleSearchResultTap('${profile.username}')">
+                        <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg, #00d2ff, #0055ff); display:flex; justify-content:center; align-items:center; font-size:12px; font-weight:600; overflow:hidden;">${avatarIcon}</div>
+                        <div>
+                            <h4 style="margin:0; font-size:14px; color:#fff;">${profile.displayName}</h4>
+                            <p style="margin:1px 0 0 0; font-size:11px; color:var(--neon-blue);">@${profile.username}</p>
+                        </div>
+                    </div>
+                `;
+            });
         } else {
-            container.innerHTML = `<p style="font-size:13px; color:#64748b; text-align:center; margin-top:20px;">No result found for "${queryRaw}"</p>`;
+            container.innerHTML = `<p style="font-size:13px; color:#64748b; text-align:center; margin-top:15px;">No result found for "${query}"</p>`;
         }
     }
 
-    // Profile Modals Configurations Switchers
+    function handleSearchResultTap(targetUsername) {
+        const viewPort = document.getElementById('subViewContent');
+        if (targetUsername === operatingUserKey) {
+            switchActiveTab('profile', document.querySelectorAll('.nav-item')[3]);
+        } else {
+            document.getElementById('panelTitle').innerText = "User Profile";
+            renderUserProfile(targetUsername, viewPort, false);
+        }
+    }
+
+    // Dynamic Generic Profile Renderer Configuration Box
+    function renderUserProfile(username, targetContainer, isOwnProfile) {
+        const userObj = JSON.parse(localStorage.getItem(`bubble_db_user_${username}`));
+        const currentImgDisplay = userObj.image ? `<img src="${userObj.image}">` : userObj.displayName.substring(0,2).toUpperCase();
+        
+        // Follow Dynamic Cache Flag verification check
+        const followFlagKey = `follow_${operatingUserKey}_to_${username}`;
+        const isFollowing = localStorage.getItem(followFlagKey) !== null;
+        const followBtnText = isFollowing ? "Following" : "Follow";
+
+        let actionControlBlock = `<button class="btn-neon" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:none;" onclick="displayProfileConfigurator()">Edit Profile</button>`;
+        
+        if (!isOwnProfile) {
+            actionControlBlock = `
+                <div style="display:flex; gap:8px; width:100%;">
+                    <button class="btn-neon" id="followBtnAction" style="${isFollowing?'background:rgba(255,255,255,0.1);box-shadow:none;':''}" onclick="toggleFollowTarget('${username}')">${followBtnText}</button>
+                    <button class="btn-neon" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:none;" onclick="openDirectChatArea('${username}')">Message</button>
+                </div>
+            `;
+        }
+
+        targetContainer.innerHTML = `
+            <div style="text-align:center; margin-top:10px;">
+                <div class="profile-pic-container" ${isOwnProfile?'onclick="revealActionSheet()"':''}>
+                    <div class="profile-avatar" id="profileViewAvatarNode">${currentImgDisplay}</div>
+                    ${isOwnProfile?'<div style="position:absolute; bottom:0; right:0; background:var(--neon-blue); border-radius:50%; width:22px; height:22px; display:flex; justify-content:center; align-items:center;"><i data-lucide="camera" style="width:11px; height:11px; color:#000;"></i></div>':''}
+                </div>
+                <h3 style="margin:0 0 2px 0; color:#fff; font-size:18px;">${userObj.displayName}</h3>
+                <p style="margin:0 0 10px 0; font-size:12px; color:#64748b;">@${userObj.username}</p>
+                <p style="font-size:12px; margin:0 0 14px 0; color:var(--neon-blue);"><b><span id="followerCountNode">${userObj.followers || 0}</span></b> Followers</p>
+                <p style="margin:0 auto 20px auto; font-size:13px; color:#94a3b8; max-width:240px; background:rgba(255,255,255,0.01); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); word-break:break-word;">${userObj.bio}</p>
+                ${actionControlBlock}
+            </div>
+        `;
+        lucide.createIcons();
+    }
+
+    function toggleFollowTarget(targetUsername) {
+        const followFlagKey = `follow_${operatingUserKey}_to_${targetUsername}`;
+        const userObj = JSON.parse(localStorage.getItem(`bubble_db_user_${targetUsername}`));
+        const followBtn = document.getElementById('followBtnAction');
+        const countNode = document.getElementById('followerCountNode');
+
+        if (localStorage.getItem(followFlagKey) === null) {
+            localStorage.setItem(followFlagKey, "true");
+            userObj.followers = (userObj.followers || 0) + 1;
+            followBtn.innerText = "Following";
+            followBtn.style.background = "rgba(255,255,255,0.1)";
+            followBtn.style.boxShadow = "none";
+        } else {
+            localStorage.removeItem(followFlagKey);
+            userObj.followers = Math.max(0, (userObj.followers || 0) - 1);
+            followBtn.innerText = "Follow";
+            followBtn.style.background = "linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(0, 90, 255, 0.8))";
+        }
+        localStorage.setItem(`bubble_db_user_${targetUsername}`, JSON.stringify(userObj));
+        countNode.innerText = userObj.followers;
+    }
+
+    // Chat Controller Area Framework Layout Setup Pipelines
+    function openDirectChatArea(targetUsername) {
+        activeChatTarget = targetUsername;
+        document.getElementById('panelTitle').innerText = `Chat: @${targetUsername}`;
+        const viewPort = document.getElementById('subViewContent');
+        
+        viewPort.innerHTML = `
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMsgFlowBox"></div>
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="liveChatInput" placeholder="Message..." onkeypress="if(event.key==='Enter') dispatchLiveMsg()">
+                    <button class="btn-neon" style="width:auto; padding:0 16px;" onclick="dispatchLiveMsg()"><i data-lucide="send" style="width:16px; height:16px;"></i></button>
+                </div>
+            </div>
+        `;
+        lucide.createIcons();
+        reloadChatMessageNodeList();
+    }
+
+    function dispatchLiveMsg() {
+        const input = document.getElementById('liveChatInput');
+        const text = input.value.trim();
+        if(!text) return;
+
+        const chatRoomId = [operatingUserKey, activeChatTarget].sort().join('_log_');
+        let chatHistory = JSON.parse(localStorage.getItem(`chat_history_${chatRoomId}`)) || [];
+        
+        chatHistory.push({ sender: operatingUserKey, text: text, timestamp: Date.now() });
+        localStorage.setItem(`chat_history_${chatRoomId}`, JSON.stringify(chatHistory));
+        
+        input.value = "";
+        reloadChatMessageNodeList();
+
+        // Simulated Automatic Reply Bot System (Dost ka reply back module simulation)
+        setTimeout(() => {
+            if(activeChatTarget === 'reurge' || activeChatTarget === 'reurges') {
+                chatHistory.push({ sender: activeChatTarget, text: `Hey! I received your message: "${text}".`, timestamp: Date.now() });
+                localStorage.setItem(`chat_history_${chatRoomId}`, JSON.stringify(chatHistory));
+                if(document.getElementById('chatMsgFlowBox')) reloadChatMessageNodeList();
+            }
+        }, 1500);
+    }
+
+    function reloadChatMessageNodeList() {
+        const box = document.getElementById('chatMsgFlowBox');
+        if(!box) return;
+        box.innerHTML = "";
+        const chatRoomId = [operatingUserKey, activeChatTarget].sort().join('_log_');
+        const chatHistory = JSON.parse(localStorage.getItem(`chat_history_${chatRoomId}`)) || [];
+
+        chatHistory.forEach(msg => {
+            const cls = msg.sender === operatingUserKey ? 'msg-send' : 'msg-receive';
+            box.innerHTML += `<div class="msg-bubble ${cls}">${msg.text}</div>`;
+        });
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function renderChatInboxList(targetContainer) {
+        targetContainer.innerHTML = `<p style="font-size:12px; color:#64748b; text-align:center; margin-top:20px;">Active Chat Rooms will auto-index below.</p><div id="inboxList"></div>`;
+        const listContainer = document.getElementById('inboxList');
+        
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('chat_history_')) {
+                const roomClean = key.replace('chat_history_', '');
+                if (roomClean.includes(operatingUserKey)) {
+                    const targetFriend = roomClean.replace(operatingUserKey, '').replace('_log_', '');
+                    const friendMeta = JSON.parse(localStorage.getItem(`bubble_db_user_${targetFriend}`));
+                    if (friendMeta) {
+                        listContainer.innerHTML += `
+                            <div class="search-row-item" onclick="openDirectChatArea('${targetFriend}')">
+                                <div style="font-weight:600;">@${targetFriend}</div>
+                            </div>
+                        `;
+                    }
+                }
+            }
+        }
+    }
+
+    // Profile Settings Form Processing Modules Configuration Code Block
     function displayProfileConfigurator() {
         document.getElementById('dashboardScreen').classList.add('hidden');
         document.getElementById('appNavbar').classList.add('hidden');
         document.getElementById('editProfileScreen').classList.remove('hidden');
-        document.getElementById('editError').innerText = "";
-
         const currentCachedData = JSON.parse(localStorage.getItem(`bubble_db_user_${operatingUserKey}`));
         document.getElementById('editName').value = currentCachedData.displayName;
         document.getElementById('editUsername').value = currentCachedData.username;
         document.getElementById('editPassword').value = currentCachedData.password;
         document.getElementById('editBio').value = currentCachedData.bio;
-        temporaryEditBase64Image = currentCachedData.image || ""; // Keep persistent tracking active
+        temporaryEditBase64Image = currentCachedData.image || "";
     }
 
     function dismissEditScreen() {
@@ -433,41 +483,33 @@
         const targetPass = document.getElementById('editPassword').value;
         const targetBio = document.getElementById('editBio').value.trim();
         const errNode = document.getElementById('editError');
-        errNode.innerText = "";
 
-        if (!targetName) return errNode.innerText = "Error: Display Name cannot be empty!";
+        if (!targetName) return errNode.innerText = "Error: Display Name empty!";
         if (!lowerCaseAlphaRegex.test(targetUser) || targetUser.length < 2 || targetUser.length > 10) {
-            return errNode.innerText = "Error: Username must be 2-10 letters (Small alphabets ONLY)!";
+            return errNode.innerText = "Error: Username invalid (2-10 small letters only)!";
         }
-        if (!targetPass) return errNode.innerText = "Error: Password field required!";
+        if (!targetPass) return errNode.innerText = "Error: Password mandatory!";
 
-        // Overlapping Username Allocation Safeguards
         if (targetUser !== operatingUserKey) {
             if (localStorage.getItem(`bubble_db_user_${targetUser}`) !== null) {
-                return errNode.innerText = "Error: This target username is already assigned!";
+                return errNode.innerText = "Error: Username already token!";
             }
-            // Purge historical pointer nodes from cache store
             localStorage.removeItem(`bubble_db_user_${operatingUserKey}`);
         }
 
-        const consolidatedProfileSchema = {
+        const currentCachedData = JSON.parse(localStorage.getItem(`bubble_db_user_${operatingUserKey}`)) || {};
+        const updatedSchema = {
             username: targetUser, password: targetPass, displayName: targetName,
-            bio: targetBio || "Active on Bubble Net Platform.", image: temporaryEditBase64Image
+            bio: targetBio || "Active on Bubble Net Platform.", image: temporaryEditBase64Image,
+            followers: currentCachedData.followers || 0
         };
 
-        // Inject modifications into DB store
-        localStorage.setItem(`bubble_db_user_${targetUser}`, JSON.stringify(consolidatedProfileSchema));
-        
-        // Stabilize system runtime environment keys
+        localStorage.setItem(`bubble_db_user_${targetUser}`, JSON.stringify(updatedSchema));
         operatingUserKey = targetUser;
         localStorage.setItem('active_bubble_session', targetUser);
-        
-        // Exit screen safely and clear pointers
-        document.getElementById('globalTag').innerText = `@${targetUser}`;
         dismissEditScreen();
     }
 
-    // Action Sheets Handlers Pipeline Configuration
     function revealActionSheet() { document.getElementById('photoSheet').classList.add('open'); }
     function hideActionSheet() { document.getElementById('photoSheet').classList.remove('open'); }
     function triggerDeviceGallery() { document.getElementById('deviceGalleryInput').click(); }
@@ -478,21 +520,11 @@
             const streamReader = new FileReader();
             streamReader.onload = function(e) {
                 const b64DataStr = e.target.result;
-                temporaryEditBase64Image = b64DataStr; // Sync with runtime local configuration cache
-
-                // Update deep storage layer right away so state transitions are persistent
-                const rawDb = localStorage.getItem(`bubble_db_user_${operatingUserKey}`);
-                if (rawDb) {
-                    const parsed = JSON.parse(rawDb);
-                    parsed.image = b64DataStr;
-                    localStorage.setItem(`bubble_db_user_${operatingUserKey}`, JSON.stringify(parsed));
-                }
-
-                // Smoothly patch current DOM graphics node layout pipeline
-                const profileImgContainer = document.getElementById('profileViewAvatarNode');
-                if (profileImgContainer) {
-                    profileImgContainer.innerHTML = `<img src="${b64DataStr}">`;
-                }
+                temporaryEditBase64Image = b64DataStr;
+                const parsed = JSON.parse(localStorage.getItem(`bubble_db_user_${operatingUserKey}`));
+                parsed.image = b64DataStr;
+                localStorage.setItem(`bubble_db_user_${operatingUserKey}`, JSON.stringify(parsed));
+                document.getElementById('profileViewAvatarNode').innerHTML = `<img src="${b64DataStr}">`;
                 hideActionSheet();
             };
             streamReader.readAsDataURL(imgFile);
@@ -501,21 +533,14 @@
 
     function purgeAvatarGraphic() {
         temporaryEditBase64Image = "";
-        const rawDb = localStorage.getItem(`bubble_db_user_${operatingUserKey}`);
-        if (rawDb) {
-            const parsed = JSON.parse(rawDb);
-            parsed.image = "";
-            localStorage.setItem(`bubble_db_user_${operatingUserKey}`, JSON.stringify(parsed));
-        }
-
-        const profileImgContainer = document.getElementById('profileViewAvatarNode');
-        if (profileImgContainer) {
-            const currentCachedData = JSON.parse(rawDb);
-            profileImgContainer.innerHTML = currentCachedData.displayName.substring(0,2).toUpperCase();
-        }
+        const parsed = JSON.parse(localStorage.getItem(`bubble_db_user_${operatingUserKey}`));
+        parsed.image = "";
+        localStorage.setItem(`bubble_db_user_${operatingUserKey}`, JSON.stringify(parsed));
+        document.getElementById('profileViewAvatarNode').innerHTML = parsed.displayName.substring(0,2).toUpperCase();
         hideActionSheet();
     }
 </script>
 
 </body>
 </html>
+
