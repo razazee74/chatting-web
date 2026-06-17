@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Chat Hub</title>
+    <title>Bubble Net</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --bg-color: #060b13;
-            --card-bg: #0f172a;
+            --bg-gradient: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
             --neon-blue: #00d2ff;
-            --neon-glow: 0 0 15px rgba(0, 210, 255, 0.4);
-            --text-color: #e2e8f0;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(0, 210, 255, 0.15);
+            --glass-blur: blur(16px);
+            --neon-glow: 0 8px 32px 0 rgba(0, 210, 255, 0.2);
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: var(--bg-gradient);
+            color: #f8fafc;
             margin: 0;
             display: flex;
             justify-content: center;
@@ -25,311 +27,313 @@
             overflow: hidden;
         }
 
-        /* 1-Second Neon Loading Screen */
+        /* Background Animated Floating Bubbles */
+        .bg-bubbles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: 1;
+        }
+        .bg-bubbles li {
+            position: absolute; list-style: none; display: block;
+            width: 40px; height: 40px; background-color: rgba(0, 210, 255, 0.1);
+            bottom: -160px; border-radius: 50%;
+            animation: bubble-up 20s linear infinite;
+        }
+        .bg-bubbles li:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
+        .bg-bubbles li:nth-child(2) { left: 20%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 17s; }
+        .bg-bubbles li:nth-child(3) { left: 70%; width: 60px; height: 60px; animation-delay: 4s; }
+        .bg-bubbles li:nth-child(4) { left: 40%; width: 100px; height: 100px; animation-duration: 22s; }
+        .bg-bubbles li:nth-child(5) { left: 85%; width: 40px; height: 40px; animation-delay: 1s; }
+        @keyframes bubble-up {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 50%; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 20%; }
+        }
+
+        /* 1-Second Loading Screen */
         #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.4s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #020617; display: flex; justify-content: center; align-items: center;
+            z-index: 9999; transition: opacity 0.4s ease;
         }
-
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(0, 210, 255, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--neon-blue);
-            animation: spin 1s linear infinite;
-            box-shadow: var(--neon-glow);
+            width: 50px; height: 50px; border: 3px solid rgba(0, 210, 255, 0.1);
+            border-radius: 50%; border-top-color: var(--neon-blue);
+            animation: spin 1s linear infinite; box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Login & Chat Cards */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid rgba(0, 210, 255, 0.2);
-            padding: 30px;
-            border-radius: 16px;
-            width: 340px;
+        /* Premium Glassmorphism (Bubble) Container */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            padding: 35px 25px;
+            border-radius: 24px;
+            width: 360px;
             box-shadow: var(--neon-glow);
             text-align: center;
             box-sizing: border-box;
+            z-index: 10;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        h2, h3 {
-            margin-top: 0;
-            color: var(--neon-blue);
+        h2 {
+            margin-top: 0; margin-bottom: 25px; color: #fff;
+            font-weight: 600; letter-spacing: 1px;
             text-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
-            letter-spacing: 1px;
         }
 
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            font-size: 12px;
-            color: #94a3b8;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-        }
-
+        /* Glass Inputs */
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 6px; letter-spacing: 0.5px; }
         input {
-            width: 100%;
-            padding: 12px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: white;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
-            transition: 0.3s;
+            width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1); color: white;
+            border-radius: 12px; box-sizing: border-box; font-size: 14px; transition: 0.3s;
         }
-
         input:focus {
-            outline: none;
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 8px rgba(0, 210, 255, 0.2);
+            outline: none; border-color: var(--neon-blue);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
         }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #00d2ff, #0066ff);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.4);
-            transition: 0.2s;
+        /* Glass Button */
+        .btn-neon {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(0, 102, 255, 0.8));
+            color: white; border: none; border-radius: 12px;
+            cursor: pointer; font-weight: 600; font-size: 15px;
+            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3); transition: 0.3s;
         }
-
-        button:hover {
-            transform: translateY(-1px);
+        .btn-neon:hover {
+            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 210, 255, 0.6);
         }
 
-        .error-msg {
-            color: #ff4a4a;
-            font-size: 12px;
-            margin-top: 10px;
-            min-height: 18px;
-        }
+        .error-msg { color: #ff4a4a; font-size: 12px; margin-top: 12px; min-height: 18px; }
+        .hidden { display: none !important; opacity: 0; transform: scale(0.9); }
 
-        .hidden {
-            display: none !important;
-        }
-
-        /* P2P System Styles */
-        textarea {
-            width: 100%;
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #cbd5e1;
-            border-radius: 6px;
-            padding: 8px;
-            resize: none;
-            font-size: 11px;
-            box-sizing: border-box;
+        /* ================= HOMEPAGE DASHBOARD ================= */
+        .dashboard-container {
+            width: 400px; height: 600px; display: flex; flex-direction: column;
+            position: relative; padding-bottom: 90px; /* Space for navbar */
         }
         
-        #chatBox {
-            height: 220px;
-            background: #030712;
-            border: 1px solid #1e293b;
-            border-radius: 8px;
-            padding: 12px;
-            overflow-y: auto;
-            margin-bottom: 12px;
-            text-align: left;
+        .screen-content {
+            flex: 1; overflow-y: auto; padding: 10px;
+            display: flex; flex-direction: column; text-align: left;
         }
 
-        .msg { margin-bottom: 8px; font-size: 14px; word-break: break-all; }
-        .me { color: var(--neon-blue); font-weight: bold; }
-        .friend { color: #10b981; font-weight: bold; }
+        /* Floating Bubble Navigation Bar (Bottom) */
+        .bubble-navbar {
+            position: absolute; bottom: 15px; left: 50%;
+            transform: translateX(-50%); width: 85%;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px; padding: 10px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.2);
+        }
+
+        .nav-item {
+            color: #94a3b8; cursor: pointer; padding: 10px;
+            border-radius: 50%; transition: all 0.3s ease;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--neon-blue);
+            background: rgba(0, 210, 255, 0.1);
+            transform: translateY(-5px);
+            text-shadow: 0 0 10px rgba(0,210,255,0.5);
+        }
+
+        /* Dummy Chat List & Elements */
+        .chat-item {
+            display: flex; align-items: center; gap: 15px;
+            padding: 12px; background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px; margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .avatar {
+            width: 45px; height: 45px; border-radius: 50%;
+            background: linear-gradient(135deg, #00d2ff, #0066ff);
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; color: white;
+        }
+        .chat-info h4 { margin: 0; font-size: 15px; color: #fff; }
+        .chat-info p { margin: 4px 0 0 0; font-size: 12px; color: #94a3b8; }
     </style>
 </head>
 <body>
+
+    <ul class="bg-bubbles">
+        <li></li><li></li><li></li><li></li><li></li>
+    </ul>
 
     <div id="loader">
         <div class="spinner"></div>
     </div>
 
-    <div id="loginCard" class="card">
-        <h2>PORTAL LOGIN</h2>
+    <div id="loginCard" class="glass-card">
+        <h2>Portal Login</h2>
         <div class="input-group">
-            <label for="username">Your Name (2-10 Letters)</label>
-            <input type="text" id="username" placeholder="Enter name..." autocomplete="off">
+            <label>Your Name (2-10 Letters)</label>
+            <input type="text" id="username" placeholder="Enter username..." autocomplete="off">
         </div>
         <div class="input-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter password...">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="••••••••">
         </div>
-        <button onclick="handleAuth()">Access Chat</button>
+        <button class="btn-neon" onclick="handleAuth()">Access Dashboard</button>
         <div id="errorBox" class="error-msg"></div>
     </div>
 
-    <div id="chatDashboard" class="card hidden" style="width: 450px;">
-        <h3 id="welcomeUser">Welcome</h3>
+    <div id="homepage" class="glass-card dashboard-container hidden">
         
-        <div id="p2pSetup" style="border-bottom: 1px solid #1e293b; margin-bottom: 15px; padding-bottom: 15px;">
-            <div style="margin-bottom: 10px;">
-                <button onclick="generateRoomCode()" style="background: #1e293b; border: 1px solid var(--neon-blue); box-shadow: none; font-size: 12px; padding: 6px;">1. Generate My Code</button>
-                <textarea id="myCode" rows="2" readonly placeholder="Aapka secret code yahan aayega..."></textarea>
-            </div>
-            <div>
-                <textarea id="friendCode" rows="2" placeholder="Dost ka code yahan paste karein..."></textarea>
-                <button onclick="connectToFriend()" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); margin-top: 5px; padding: 8px;">2. Connect to Friend</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
+            <h3 id="pageTitle" style="margin:0; color: var(--neon-blue);">Home</h3>
+            <span id="userBadge" style="font-size: 12px; background: rgba(0,210,255,0.1); padding: 4px 10px; border-radius: 12px; border: 1px solid var(--glass-border);">User</span>
+        </div>
+
+        <div class="screen-content" id="screenContent">
+            <div id="homeView">
+                <p style="color: #94a3b8; font-size: 14px;">Welcome back! Here is what's happening today.</p>
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05);">
+                    <h5 style="margin:0 0 5px 0; color: #fff;">System Status</h5>
+                    <p style="margin:0; font-size: 12px; color: #34d399;">● All networks online</p>
+                </div>
             </div>
         </div>
 
-        <div id="actualChat" class="hidden">
-            <div id="chatBox"></div>
-            <div style="display: flex; gap: 8px;">
-                <input type="text" id="msgBox" placeholder="Type neon message..." onkeypress="if(event.key === 'Enter') sendNeonMessage()">
-                <button onclick="sendNeonMessage()" style="width: auto; padding: 0 20px;">Send</button>
-            </div>
+        <div class="bubble-navbar">
+            <div class="nav-item active" onclick="switchTab('home', this)"><i data-lucide="home"></i></div>
+            <div class="nav-item" onclick="switchTab('chat', this)"><i data-lucide="message-square"></i></div>
+            <div class="nav-item" onclick="switchTab('search', this)"><i data-lucide="search"></i></div>
+            <div class="nav-item" onclick="switchTab('profile', this)"><i data-lucide="user"></i></div>
+            <div class="nav-item" onclick="switchTab('settings', this)"><i data-lucide="settings"></i></div>
         </div>
     </div>
 
 <script>
-    let currentUsername = "";
+    let activeUser = "";
 
-    // 1. Force Loading Screen for exactly 1 second on start/refresh
+    // 1. Loader Logic (Exactly 1 Second timeout)
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const loader = document.getElementById('loader');
             loader.style.opacity = '0';
             setTimeout(() => loader.classList.add('hidden'), 400);
         }, 1000);
+        lucide.createIcons(); // Load dynamic icons
     });
 
-    // 2. Authentication Logic (Signup / Login Custom Controller)
+    // 2. Auth Controller (LocalStorage DB)
     function handleAuth() {
         const nameInput = document.getElementById('username').value.trim();
         const passInput = document.getElementById('password').value;
         const errorBox = document.getElementById('errorBox');
-        
-        errorBox.innerText = ""; // clear previous errors
+        errorBox.innerText = "";
 
-        // Rule Check: Name length boundary (2 to 10 characters)
+        // Length Constraints Check
         if (nameInput.length < 2 || nameInput.length > 10) {
-            errorBox.innerText = "Error: Name must be between 2 and 10 letters!";
+            errorBox.innerText = "Name length must be between 2 and 10 letters!";
             return;
         }
-
         if (!passInput) {
-            errorBox.innerText = "Error: Password cannot be empty!";
+            errorBox.innerText = "Password cannot be left empty!";
             return;
         }
 
-        // Local Database Management (via localStorage keys)
-        const savedPassword = localStorage.getItem(`user_pass_${nameInput.toLowerCase()}`);
+        const savedPassword = localStorage.getItem(`bubble_u_${nameInput.toLowerCase()}`);
 
         if (savedPassword === null) {
-            // Case A: Username doesn't exist, Registering as New Account
-            localStorage.setItem(`user_pass_${nameInput.toLowerCase()}`, passInput);
-            initializeSession(nameInput);
+            // Register Account
+            localStorage.setItem(`bubble_u_${nameInput.toLowerCase()}`, passInput);
+            enterDashboard(nameInput);
         } else {
-            // Case B: Username exists, Attempting Login Verification
+            // Login Validation
             if (savedPassword === passInput) {
-                initializeSession(nameInput);
+                enterDashboard(nameInput);
             } else {
-                errorBox.innerText = "Error: Incorrect password for this username!";
+                errorBox.innerText = "Incorrect password for this username!";
             }
         }
     }
 
-    function initializeSession(username) {
-        currentUsername = username;
-        document.getElementById('loginCard').classList.add('hidden');
-        document.getElementById('chatDashboard').classList.remove('hidden');
-        document.getElementById('welcomeUser').innerText = `⚡ Session: ${username}`;
-    }
-
-
-    // ==========================================
-    // 3. P2P WebRTC Core Engine (Serverless Sync)
-    // ==========================================
-    const p2pEngine = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-    let communicationChannel;
-
-    p2pEngine.onicecandidate = e => {
-        if (!e.candidate) {
-            document.getElementById('myCode').value = btoa(JSON.stringify(p2pEngine.localDescription));
-        }
-    };
-
-    p2pEngine.ondatachannel = e => {
-        communicationChannel = e.channel;
-        bindChannelEvents();
-    };
-
-    async function generateRoomCode() {
-        communicationChannel = p2pEngine.createDataChannel("neon_sync");
-        bindChannelEvents();
-        const offer = await p2pEngine.createOffer();
-        await p2pEngine.setLocalDescription(offer);
-    }
-
-    async function connectToFriend() {
-        const incomingRaw = document.getElementById('friendCode').value.trim();
-        if (!incomingRaw) return alert("Please paste your friend's handshake token first.");
+    function enterDashboard(username) {
+        activeUser = username;
+        document.getElementById('userBadge').innerText = username;
         
-        try {
-            const parsedToken = new RTCSessionDescription(JSON.parse(atob(incomingRaw)));
-            await p2pEngine.setRemoteDescription(parsedToken);
+        // Hide Login & Smoothly reveal Homepage
+        document.getElementById('loginCard').classList.add('hidden');
+        const home = document.getElementById('homepage');
+        home.classList.remove('hidden');
+        setTimeout(() => home.style.opacity = "1", 50);
+        
+        switchTab('home', document.querySelector('.nav-item'));
+    }
 
-            if (parsedToken.type === 'offer') {
-                const answer = await p2pEngine.createAnswer();
-                await p2pEngine.setLocalDescription(answer);
-            }
-        } catch (err) {
-            alert("Invalid connection token configuration.");
+    // 3. Navigation System (Tab Switcher Engine)
+    function switchTab(tabName, element) {
+        // Highlight correct icon
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        element.classList.add('active');
+
+        const title = document.getElementById('pageTitle');
+        const content = document.getElementById('screenContent');
+        
+        // Update title cleanly
+        title.innerText = tabName.charAt(0).toUpperCase() + tabName.slice(1);
+
+        // Render mock templates dynamically based on selection
+        if (tabName === 'home') {
+            content.innerHTML = `
+                <p style="color: #94a3b8; font-size: 14px;">Welcome back, <b>${activeUser}</b>! Access your dashboard features below.</p>
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); margin-top:10px;">
+                    <h5 style="margin:0 0 5px 0; color: #fff;">Quick Stats</h5>
+                    <p style="margin:0; font-size: 12px; color: var(--neon-blue);">Active Session Secured</p>
+                </div>
+            `;
+        } else if (tabName === 'chat') {
+            content.innerHTML = `
+                <div class="chat-item">
+                    <div class="avatar">JD</div>
+                    <div class="chat-info"><h4>John Doe</h4><p>Hey, are we still coding tonight?</p></div>
+                </div>
+                <div class="chat-item">
+                    <div class="avatar" style="background:linear-gradient(135deg, #10b981, #059669)">RJ</div>
+                    <div class="chat-info"><h4>Alex (Dev)</h4><p>The bubble UI looks clean!</p></div>
+                </div>
+            `;
+        } else if (tabName === 'search') {
+            content.innerHTML = `
+                <input type="text" placeholder="Search friends or rooms..." style="margin-bottom: 15px;">
+                <p style="font-size: 12px; color:#64748b; text-align:center;">Type above to lookup global tags</p>
+            `;
+        } else if (tabName === 'profile') {
+            content.innerHTML = `
+                <div style="text-align:center; margin: 20px 0;">
+                    <div class="avatar" style="width:70px; height:70px; font-size:24px; margin: 0 auto 10px auto;">${activeUser.substring(0,2).toUpperCase()}</div>
+                    <h3 style="margin:0; color:#fff;">${activeUser}</h3>
+                    <p style="margin:5px 0; font-size:13px; color:#64748b;">Premium Core Member</p>
+                </div>
+            `;
+        } else if (tabName === 'settings') {
+            content.innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <label style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:12px; border-radius:10px;">
+                        <span>Dark Neon Theme</span><input type="checkbox" checked style="width:auto;">
+                    </label>
+                    <label style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:12px; border-radius:10px;">
+                        <span>Haptic Vibrations</span><input type="checkbox" style="width:auto;">
+                    </label>
+                </div>
+            `;
         }
-    }
-
-    function bindChannelEvents() {
-        communicationChannel.onopen = () => {
-            document.getElementById('p2pSetup').classList.add('hidden');
-            document.getElementById('actualChat').classList.remove('hidden');
-        };
-        communicationChannel.onmessage = e => {
-            const package = JSON.parse(e.data);
-            renderMessage(package.sender, package.msg, 'friend');
-        };
-    }
-
-    function sendNeonMessage() {
-        const msgBox = document.getElementById('msgBox');
-        const text = msgBox.value.trim();
-        if (!text || !communicationChannel || communicationChannel.readyState !== "open") return;
-
-        const packet = { sender: currentUsername, msg: text };
-        communicationChannel.send(JSON.stringify(packet));
-        renderMessage('You', text, 'me');
-        msgBox.value = '';
-    }
-
-    function renderMessage(senderName, messageText, contextClass) {
-        const chatBox = document.getElementById('chatBox');
-        chatBox.innerHTML += `<div class="msg"><span class="${contextClass}">${senderName}:</span> ${messageText}</div>`;
-        chatBox.scrollTop = chatBox.scrollHeight;
+        lucide.createIcons(); // Re-render newly added icons inside tabs if any
     }
 </script>
 
