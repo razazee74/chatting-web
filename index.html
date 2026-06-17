@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bubble Net</title>
+    <title>Bubble App</title>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --bg-gradient: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+            --bg-gradient: radial-gradient(circle at 50% 50%, #0a0f1d 0%, #020610 100%);
             --neon-blue: #00d2ff;
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(0, 210, 255, 0.15);
-            --glass-blur: blur(16px);
-            --neon-glow: 0 8px 32px 0 rgba(0, 210, 255, 0.2);
+            --glass-blur: blur(20px);
+            --neon-glow: 0 10px 30px rgba(0, 210, 255, 0.15);
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg-gradient);
             color: #f8fafc;
             margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,315 +30,388 @@
             overflow: hidden;
         }
 
-        /* Background Animated Floating Bubbles */
+        /* Background Bubbles */
         .bg-bubbles {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            overflow: hidden; z-index: 1;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: 1; margin: 0; padding: 0;
         }
         .bg-bubbles li {
             position: absolute; list-style: none; display: block;
-            width: 40px; height: 40px; background-color: rgba(0, 210, 255, 0.1);
-            bottom: -160px; border-radius: 50%;
-            animation: bubble-up 20s linear infinite;
+            width: 30px; height: 30px; background-color: rgba(0, 210, 255, 0.06);
+            bottom: -100px; border-radius: 50%; animation: bubble-up 15s linear infinite;
         }
-        .bg-bubbles li:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
-        .bg-bubbles li:nth-child(2) { left: 20%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 17s; }
-        .bg-bubbles li:nth-child(3) { left: 70%; width: 60px; height: 60px; animation-delay: 4s; }
-        .bg-bubbles li:nth-child(4) { left: 40%; width: 100px; height: 100px; animation-duration: 22s; }
-        .bg-bubbles li:nth-child(5) { left: 85%; width: 40px; height: 40px; animation-delay: 1s; }
+        .bg-bubbles li:nth-child(1) { left: 15%; width: 60px; height: 60px; animation-delay: 0s; }
+        .bg-bubbles li:nth-child(2) { left: 35%; width: 25px; height: 25px; animation-delay: 3s; animation-duration: 12s; }
+        .bg-bubbles li:nth-child(3) { left: 75%; width: 50px; height: 50px; animation-delay: 1s; }
+        .bg-bubbles li:nth-child(4) { left: 85%; width: 70px; height: 70px; animation-duration: 18s; }
         @keyframes bubble-up {
             0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 50%; }
-            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 20%; }
+            100% { transform: translateY(-1100px) rotate(360deg); opacity: 0; border-radius: 30%; }
         }
 
-        /* 1-Second Loading Screen */
+        /* 1-Second Neon Loader */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #020617; display: flex; justify-content: center; align-items: center;
-            z-index: 9999; transition: opacity 0.4s ease;
+            background: #020610; display: flex; justify-content: center; align-items: center;
+            z-index: 9999; transition: opacity 0.3s ease;
         }
         .spinner {
-            width: 50px; height: 50px; border: 3px solid rgba(0, 210, 255, 0.1);
+            width: 45px; height: 45px; border: 3px solid rgba(0, 210, 255, 0.1);
             border-radius: 50%; border-top-color: var(--neon-blue);
-            animation: spin 1s linear infinite; box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+            animation: spin 1s linear infinite; box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Premium Glassmorphism (Bubble) Container */
-        .glass-card {
+        /* Mobile Container Layout (Centralized & Well-Balanced) */
+        .app-frame {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
-            padding: 35px 25px;
-            border-radius: 24px;
-            width: 360px;
+            width: 90%;
+            max-width: 360px;
+            height: 80vh;
+            max-height: 640px;
+            border-radius: 28px;
             box-shadow: var(--neon-glow);
-            text-align: center;
-            box-sizing: border-box;
             z-index: 10;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Content Area */
+        .app-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+
+        .center-screen {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
         h2 {
-            margin-top: 0; margin-bottom: 25px; color: #fff;
-            font-weight: 600; letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+            margin-top: 0; margin-bottom: 24px; color: #fff;
+            font-size: 22px; font-weight: 600; letter-spacing: 0.5px;
+            text-shadow: 0 0 8px rgba(0, 210, 255, 0.3);
         }
 
-        /* Glass Inputs */
-        .input-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 6px; letter-spacing: 0.5px; }
-        input {
-            width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1); color: white;
-            border-radius: 12px; box-sizing: border-box; font-size: 14px; transition: 0.3s;
+        /* Glass Input Fields */
+        .input-group { width: 100%; margin-bottom: 16px; text-align: left; }
+        label { display: block; font-size: 11px; color: #94a3b8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, textarea {
+            width: 100%; padding: 12px 14px; background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08); color: white;
+            border-radius: 12px; font-size: 14px; transition: 0.2s; box-sizing: border-box;
         }
-        input:focus {
+        input:focus, textarea:focus {
             outline: none; border-color: var(--neon-blue);
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.07);
             box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
         }
+        textarea { resize: none; font-family: inherit; }
 
-        /* Glass Button */
+        /* Glass Action Button */
         .btn-neon {
-            width: 100%; padding: 14px;
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(0, 102, 255, 0.8));
+            width: 100%; padding: 13px;
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.8), rgba(0, 90, 255, 0.8));
             color: white; border: none; border-radius: 12px;
-            cursor: pointer; font-weight: 600; font-size: 15px;
-            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3); transition: 0.3s;
+            cursor: pointer; font-weight: 600; font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0, 90, 255, 0.3); transition: 0.2s;
         }
         .btn-neon:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 210, 255, 0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0, 210, 255, 0.5);
         }
 
-        .error-msg { color: #ff4a4a; font-size: 12px; margin-top: 12px; min-height: 18px; }
-        .hidden { display: none !important; opacity: 0; transform: scale(0.9); }
+        .error-msg { color: #ff5555; font-size: 12px; margin-top: 8px; text-align: center; font-weight: 500; }
 
-        /* ================= HOMEPAGE DASHBOARD ================= */
-        .dashboard-container {
-            width: 400px; height: 600px; display: flex; flex-direction: column;
-            position: relative; padding-bottom: 90px; /* Space for navbar */
-        }
-        
-        .screen-content {
-            flex: 1; overflow-y: auto; padding: 10px;
-            display: flex; flex-direction: column; text-align: left;
-        }
-
-        /* Floating Bubble Navigation Bar (Bottom) */
+        /* Floating Bubble Navigation Bar (4 Buttons Only) */
         .bubble-navbar {
-            position: absolute; bottom: 15px; left: 50%;
-            transform: translateX(-50%); width: 85%;
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 30px; padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 24px;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.2);
         }
 
         .nav-item {
-            color: #94a3b8; cursor: pointer; padding: 10px;
-            border-radius: 50%; transition: all 0.3s ease;
+            color: #64748b; cursor: pointer; padding: 10px;
+            border-radius: 50%; transition: all 0.2s ease;
             display: flex; justify-content: center; align-items: center;
         }
 
         .nav-item:hover, .nav-item.active {
             color: var(--neon-blue);
-            background: rgba(0, 210, 255, 0.1);
-            transform: translateY(-5px);
-            text-shadow: 0 0 10px rgba(0,210,255,0.5);
+            background: rgba(0, 210, 255, 0.08);
+            transform: translateY(-3px);
         }
 
-        /* Dummy Chat List & Elements */
-        .chat-item {
-            display: flex; align-items: center; gap: 15px;
-            padding: 12px; background: rgba(255, 255, 255, 0.02);
-            border-radius: 14px; margin-bottom: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        /* Profile Elements */
+        .profile-pic-container {
+            position: relative; width: 85px; height: 85px; margin: 0 auto 16px auto; cursor: pointer;
         }
-        .avatar {
-            width: 45px; height: 45px; border-radius: 50%;
-            background: linear-gradient(135deg, #00d2ff, #0066ff);
+        .profile-avatar {
+            width: 100%; height: 100%; border-radius: 50%;
+            background: linear-gradient(135deg, #00d2ff, #0055ff);
             display: flex; justify-content: center; align-items: center;
-            font-weight: bold; color: white;
+            font-weight: 600; color: white; font-size: 28px;
+            border: 2px solid rgba(255,255,255,0.1); overflow: hidden;
         }
-        .chat-info h4 { margin: 0; font-size: 15px; color: #fff; }
-        .chat-info p { margin: 4px 0 0 0; font-size: 12px; color: #94a3b8; }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Slide-up Bottom Sheet (Bubble style sheet) */
+        .bottom-sheet {
+            position: absolute; bottom: -100%; left: 0; width: 100%;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(25px);
+            border-top: 1px solid var(--glass-border);
+            border-top-left-radius: 24px; border-top-right-radius: 24px;
+            padding: 20px; box-sizing: border-box; z-index: 100;
+            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.5);
+        }
+        .bottom-sheet.open { bottom: 0; }
+        .sheet-btn {
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+            color: white; font-weight: 500; margin-bottom: 10px; cursor: pointer; text-align: center;
+        }
+        .sheet-btn.danger { color: #ff5555; border-color: rgba(255, 85, 85, 0.2); }
+        .sheet-btn:active { background: rgba(255,255,255,0.08); }
+
+        .hidden { display: none !important; }
+
+        /* Fake Placeholder Data lists */
+        .item-row {
+            display: flex; align-items: center; gap: 12px; padding: 12px;
+            background: rgba(255,255,255,0.02); border-radius: 12px; margin-bottom: 8px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .item-circle { width: 36px; height: 36px; border-radius: 50%; background: #1e293b; }
     </style>
 </head>
 <body>
 
     <ul class="bg-bubbles">
-        <li></li><li></li><li></li><li></li><li></li>
+        <li></li><li></li><li></li><li></li>
     </ul>
 
-    <div id="loader">
-        <div class="spinner"></div>
-    </div>
+    <div id="loader"><div class="spinner"></div></div>
 
-    <div id="loginCard" class="glass-card">
-        <h2>Portal Login</h2>
-        <div class="input-group">
-            <label>Your Name (2-10 Letters)</label>
-            <input type="text" id="username" placeholder="Enter username..." autocomplete="off">
-        </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="••••••••">
-        </div>
-        <button class="btn-neon" onclick="handleAuth()">Access Dashboard</button>
-        <div id="errorBox" class="error-msg"></div>
-    </div>
-
-    <div id="homepage" class="glass-card dashboard-container hidden">
+    <div class="app-frame">
         
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px;">
-            <h3 id="pageTitle" style="margin:0; color: var(--neon-blue);">Home</h3>
-            <span id="userBadge" style="font-size: 12px; background: rgba(0,210,255,0.1); padding: 4px 10px; border-radius: 12px; border: 1px solid var(--glass-border);">User</span>
-        </div>
-
-        <div class="screen-content" id="screenContent">
-            <div id="homeView">
-                <p style="color: #94a3b8; font-size: 14px;">Welcome back! Here is what's happening today.</p>
-                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05);">
-                    <h5 style="margin:0 0 5px 0; color: #fff;">System Status</h5>
-                    <p style="margin:0; font-size: 12px; color: #34d399;">● All networks online</p>
+        <div class="app-content">
+            
+            <div id="loginScreen" class="screen center-screen">
+                <h2>Portal Login</h2>
+                <div class="input-group">
+                    <label>Username (small letters only)</label>
+                    <input type="text" id="loginUser" placeholder="e.g. rjdev" autocomplete="off">
                 </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPass" placeholder="••••••••">
+                </div>
+                <button class="btn-neon" onclick="processAuth()">Access Dashboard</button>
+                <div id="loginError" class="error-msg"></div>
             </div>
+
+            <div id="dashboardScreen" class="screen hidden">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3 id="panelTitle" style="margin:0; color:var(--neon-blue); font-size:18px;">Home</h3>
+                    <span id="globalTag" style="font-size:11px; background:rgba(0,210,255,0.08); padding:3px 8px; border-radius:8px; border:1px solid rgba(0,210,255,0.2);">@user</span>
+                </div>
+                
+                <div id="subViewContent" style="flex:1; overflow-y:auto;"></div>
+            </div>
+
+            <div id="editProfileScreen" class="screen hidden">
+                <h3 style="margin:0 0 16px 0; color:var(--neon-blue); font-size:18px;">Edit Profile</h3>
+                
+                <div class="input-group">
+                    <label>Display Name</label>
+                    <input type="text" id="editName">
+                </div>
+                <div class="input-group">
+                    <label>Username (small letters only)</label>
+                    <input type="text" id="editUsername">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="editPassword">
+                </div>
+                <div class="input-group">
+                    <label>Bio</label>
+                    <textarea id="editBio" rows="2" placeholder="Write something..."></textarea>
+                </div>
+                
+                <button class="btn-neon" onclick="saveProfileData()">Save & Apply</button>
+                <button class="btn-neon" onclick="exitEditMode()" style="background:transparent; border:1px solid rgba(255,255,255,0.1); box-shadow:none; margin-top:8px; color:#94a3b8;">Cancel</button>
+                <div id="editError" class="error-msg"></div>
+            </div>
+
         </div>
 
-        <div class="bubble-navbar">
-            <div class="nav-item active" onclick="switchTab('home', this)"><i data-lucide="home"></i></div>
-            <div class="nav-item" onclick="switchTab('chat', this)"><i data-lucide="message-square"></i></div>
-            <div class="nav-item" onclick="switchTab('search', this)"><i data-lucide="search"></i></div>
-            <div class="nav-item" onclick="switchTab('profile', this)"><i data-lucide="user"></i></div>
-            <div class="nav-item" onclick="switchTab('settings', this)"><i data-lucide="settings"></i></div>
+        <div id="appNavbar" class="bubble-navbar hidden">
+            <div class="nav-item active" onclick="navigateTab('home', this)"><i data-lucide="home"></i></div>
+            <div class="nav-item" onclick="navigateTab('chat', this)"><i data-lucide="message-square"></i></div>
+            <div class="nav-item" onclick="navigateTab('search', this)"><i data-lucide="search"></i></div>
+            <div class="nav-item" onclick="navigateTab('profile', this)"><i data-lucide="user"></i></div>
         </div>
+
+        <div id="photoSheet" class="bottom-sheet">
+            <div style="width:40px; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin: 0 auto 15px auto;"></div>
+            <div class="sheet-btn" onclick="triggerFilePicker()">Set New Profile</div>
+            <div class="sheet-btn danger" onclick="removeProfilePic()">Remove Current Profile</div>
+            <div class="sheet-btn" onclick="closePhotoSheet()" style="background:rgba(255,255,255,0.01); border:none; margin-top:5px; color:#64748b;">Close</div>
+        </div>
+        
+        <input type="file" id="galleryInput" accept="image/*" class="hidden" onchange="loadImageFromGallery(event)">
+
     </div>
 
 <script>
-    let activeUser = "";
+    // Local State Engine Variables
+    let currentSessionUser = "";
+    let profileBioCache = "Active on Bubble Network.";
+    let profileDisplayNameCache = "";
+    let profileImageBlob = ""; // Holds base64 local image data
+    
+    // Strict Input Regex: Only lowercase letters 'a' to 'z'
+    const strictUserRegex = /^[a-z]+$/;
 
-    // 1. Loader Logic (Exactly 1 Second timeout)
+    // Fixed 1-Second Bootstrap Loader
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const loader = document.getElementById('loader');
             loader.style.opacity = '0';
-            setTimeout(() => loader.classList.add('hidden'), 400);
+            setTimeout(() => loader.classList.add('hidden'), 300);
         }, 1000);
-        lucide.createIcons(); // Load dynamic icons
+        lucide.createIcons();
     });
 
-    // 2. Auth Controller (LocalStorage DB)
-    function handleAuth() {
-        const nameInput = document.getElementById('username').value.trim();
-        const passInput = document.getElementById('password').value;
-        const errorBox = document.getElementById('errorBox');
-        errorBox.innerText = "";
+    // Primary Auth Core Verification
+    function processAuth() {
+        const userInput = document.getElementById('loginUser').value.trim();
+        const passInput = document.getElementById('loginPass').value;
+        const errBox = document.getElementById('loginError');
+        errBox.innerText = "";
 
-        // Length Constraints Check
-        if (nameInput.length < 2 || nameInput.length > 10) {
-            errorBox.innerText = "Name length must be between 2 and 10 letters!";
+        // Validator Policies
+        if (!strictUserRegex.test(userInput) || userInput.length < 2 || userInput.length > 10) {
+            errBox.innerText = "Username must be 2-10 letters (ONLY small letters, no spaces/symbols)!";
             return;
         }
         if (!passInput) {
-            errorBox.innerText = "Password cannot be left empty!";
+            errBox.innerText = "Password is required!";
             return;
         }
 
-        const savedPassword = localStorage.getItem(`bubble_u_${nameInput.toLowerCase()}`);
+        const registeredPassword = localStorage.getItem(`db_pass_${userInput}`);
 
-        if (savedPassword === null) {
-            // Register Account
-            localStorage.setItem(`bubble_u_${nameInput.toLowerCase()}`, passInput);
-            enterDashboard(nameInput);
+        if (registeredPassword === null) {
+            // Setup Brand New Account
+            localStorage.setItem(`db_pass_${userInput}`, passInput);
+            localStorage.setItem(`db_name_${userInput}`, userInput); // Default Display Name same as user
+            launchAppWorkspace(userInput);
         } else {
-            // Login Validation
-            if (savedPassword === passInput) {
-                enterDashboard(nameInput);
+            // Verify Authentication Key Match
+            if (registeredPassword === passInput) {
+                launchAppWorkspace(userInput);
             } else {
-                errorBox.innerText = "Incorrect password for this username!";
+                errBox.innerText = "Error: Incorrect password match.";
             }
         }
     }
 
-    function enterDashboard(username) {
-        activeUser = username;
-        document.getElementById('userBadge').innerText = username;
+    function launchAppWorkspace(username) {
+        currentSessionUser = username;
+        profileDisplayNameCache = localStorage.getItem(`db_name_${username}`) || username;
+        profileBioCache = localStorage.getItem(`db_bio_${username}`) || "Active on Bubble Network.";
+        profileImageBlob = localStorage.getItem(`db_img_${username}`) || "";
+
+        document.getElementById('globalTag').innerText = `@${username}`;
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.remove('hidden');
+        document.getElementById('appNavbar').classList.remove('hidden');
         
-        // Hide Login & Smoothly reveal Homepage
-        document.getElementById('loginCard').classList.add('hidden');
-        const home = document.getElementById('homepage');
-        home.classList.remove('hidden');
-        setTimeout(() => home.style.opacity = "1", 50);
-        
-        switchTab('home', document.querySelector('.nav-item'));
+        // Land directly on home component view
+        navigateTab('home', document.querySelector('.nav-item'));
     }
 
-    // 3. Navigation System (Tab Switcher Engine)
-    function switchTab(tabName, element) {
-        // Highlight correct icon
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        element.classList.add('active');
+    // Dynamic Navigation System
+    function navigateTab(targetView, navBtnElement) {
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+        if(navBtnElement) navBtnElement.classList.add('active');
 
-        const title = document.getElementById('pageTitle');
-        const content = document.getElementById('screenContent');
+        document.getElementById('panelTitle').innerText = targetView.charAt(0).toUpperCase() + targetView.slice(1);
+        const viewport = document.getElementById('subViewContent');
         
-        // Update title cleanly
-        title.innerText = tabName.charAt(0).toUpperCase() + tabName.slice(1);
-
-        // Render mock templates dynamically based on selection
-        if (tabName === 'home') {
-            content.innerHTML = `
-                <p style="color: #94a3b8; font-size: 14px;">Welcome back, <b>${activeUser}</b>! Access your dashboard features below.</p>
-                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); margin-top:10px;">
-                    <h5 style="margin:0 0 5px 0; color: #fff;">Quick Stats</h5>
-                    <p style="margin:0; font-size: 12px; color: var(--neon-blue);">Active Session Secured</p>
+        if (targetView === 'home') {
+            viewport.innerHTML = `
+                <p style="color:#94a3b8; font-size:13px; line-height:1.5;">Welcome to the dashboard framework, <b>${profileDisplayNameCache}</b>.</p>
+                <div style="background:rgba(255,255,255,0.01); padding:14px; border:1px solid rgba(255,255,255,0.04); border-radius:14px; margin-top:10px;">
+                    <h4 style="margin:0 0 4px 0; font-size:14px; color:#fff;">Status Hub</h4>
+                    <p style="margin:0; font-size:12px; color:#34d399;">● Secured peer configuration</p>
                 </div>
             `;
-        } else if (tabName === 'chat') {
-            content.innerHTML = `
-                <div class="chat-item">
-                    <div class="avatar">JD</div>
-                    <div class="chat-info"><h4>John Doe</h4><p>Hey, are we still coding tonight?</p></div>
-                </div>
-                <div class="chat-item">
-                    <div class="avatar" style="background:linear-gradient(135deg, #10b981, #059669)">RJ</div>
-                    <div class="chat-info"><h4>Alex (Dev)</h4><p>The bubble UI looks clean!</p></div>
-                </div>
+        } else if (targetView === 'chat') {
+            viewport.innerHTML = `
+                <div class="item-row"><div class="item-circle" style="background:linear-gradient(135deg, #00d2ff, #0055ff)"></div><div><h5 style="margin:0; font-size:14px;">Alex</h5><p style="margin:4px 0 0 0; font-size:11px; color:#64748b;">Let's connect later</p></div></div>
+                <div class="item-row"><div class="item-circle" style="background:linear-gradient(135deg, #a855f7, #6b21a8)"></div><div><h5 style="margin:0; font-size:14px;">Team Room</h5><p style="margin:4px 0 0 0; font-size:11px; color:#64748b;">Project layout complete</p></div></div>
             `;
-        } else if (tabName === 'search') {
-            content.innerHTML = `
-                <input type="text" placeholder="Search friends or rooms..." style="margin-bottom: 15px;">
-                <p style="font-size: 12px; color:#64748b; text-align:center;">Type above to lookup global tags</p>
+        } else if (targetView === 'search') {
+            viewport.innerHTML = `
+                <input type="text" placeholder="Lookup tags..." style="margin-bottom:12px;">
+                <p style="font-size:12px; color:#475569; text-align:center;">Global search indexes ready</p>
             `;
-        } else if (tabName === 'profile') {
-            content.innerHTML = `
-                <div style="text-align:center; margin: 20px 0;">
-                    <div class="avatar" style="width:70px; height:70px; font-size:24px; margin: 0 auto 10px auto;">${activeUser.substring(0,2).toUpperCase()}</div>
-                    <h3 style="margin:0; color:#fff;">${activeUser}</h3>
-                    <p style="margin:5px 0; font-size:13px; color:#64748b;">Premium Core Member</p>
-                </div>
-            `;
-        } else if (tabName === 'settings') {
-            content.innerHTML = `
-                <div style="display:flex; flex-direction:column; gap:12px;">
-                    <label style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:12px; border-radius:10px;">
-                        <span>Dark Neon Theme</span><input type="checkbox" checked style="width:auto;">
-                    </label>
-                    <label style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:12px; border-radius:10px;">
-                        <span>Haptic Vibrations</span><input type="checkbox" style="width:auto;">
-                    </label>
+        } else if (targetView === 'profile') {
+            // Structural Component Template rendering for profile tab view
+            const avatarGraphics = profileImageBlob ? `<img src="${profileImageBlob}">` : profileDisplayNameCache.substring(0,2).toUpperCase();
+            viewport.innerHTML = `
+                <div style="text-align:center; margin-top:10px;">
+                    <div class="profile-pic-container" onclick="openPhotoSheet()">
+                        <div class="profile-avatar" id="avatarDisplay">${avatarGraphics}</div>
+                        <div style="position:absolute; bottom:0; right:0; background:var(--neon-blue); border-radius:50%; width:24px; height:24px; display:flex; justify-content:center; align-items:center; border:2px solid #0f172a;"><i data-lucide="camera" style="width:12px; height:12px; color:#000;"></i></div>
+                    </div>
+                    <h3 style="margin:0 0 4px 0; color:#fff; font-size:18px;">${profileDisplayNameCache}</h3>
+                    <p style="margin:0 0 16px 0; font-size:12px; color:#64748b;">@${currentSessionUser}</p>
+                    <p style="margin:0 auto 20px auto; font-size:13px; color:#94a3b8; max-width:240px; background:rgba(255,255,255,0.01); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03);">${profileBioCache}</p>
+                    <button class="btn-neon" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); box-shadow:none; font-size:13px; padding:10px;" onclick="enterEditMode()">Edit Profile</button>
                 </div>
             `;
         }
-        lucide.createIcons(); // Re-render newly added icons inside tabs if any
+        lucide.createIcons();
     }
-</script>
 
-</body>
-</html>
+    // Secondary Profile Management Layer (Edit Workflow Switching)
+    function enterEditMode() {
+        document.getElementById('dashboardScreen').classList.add('hidden');
+        document.getElementById('appNavbar').classList.add('hidden');
+        document.getElementById('editProfileScreen').classList.remove('hidden');
+        document.getElementById('editError').innerText = "";
+
+        // Inject initial form defaults from data state caches
+        document.getElementById('editName').value = profileDisplayNameCache;
+        document.getElementById('editUsername').value = currentSessionUser;
+        document.getElementById('editPassword').value = localStorage.getItem(`db_pass_${currentSessionUser}`) || "";
+        document.getElementById('editBio').value = profileBioCache;
+    }
+
+    function exitEditMode() {
+        document.getElementById('editProfileScreen').classList.add('hidden');
+        document.getEl
